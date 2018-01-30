@@ -1,0 +1,140 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <ui:decorate template="/resources/templates/template.xhtml">	
+
+        <!-- Center Content -->
+        <ui:define name="conteudo_centro">
+            <h:form>
+                <p:growl id="growl" autoUpdate="true" showDetail="true" showSummary="true" />  
+                <p:panel id="history_panel" header="Histórico de Execução">
+                    <p:panel>
+                        <p:panel>
+                            Histórico de execução deste Workflow
+                        </p:panel>
+                        <br />
+                        <p:panel>
+                            <h:panelGrid columns="2" style="margin: 7px">
+                                <p:panelGrid columns="2">
+                                    <p:outputLabel value="#{workflowHistoryBean.selectedWorkflow.id}" style="font-weight: bold"/>
+                                    <p:outputLabel value="#{workflowHistoryBean.getStatusText()}" style="color: #{workflowHistoryBean.getStatusColor()}; font-weight: bold" />
+                                </p:panelGrid>
+                                <p:commandButton id="label" icon="ui-icon-newwin" value="Legenda de Status" onclick="PF('label_dlg').show()"/>
+                            </h:panelGrid>
+                            <br />
+                            <p:dataTable value="#{workflowHistoryBean.history}" var="h" paginator="true" rows="15"
+                                         emptyMessage="Sem histórico de execução ainda. Clique em atualizar para verificar se há progresso.">
+                                <p:column headerText="Data" width="30" style="text-align: center">
+                                    <p:outputLabel value="#{h.date}" />
+                                </p:column>
+
+                                <p:column headerText="Horário" width="30" style="text-align: center">
+                                    <p:outputLabel value="#{h.timestamp}" />
+                                </p:column>
+
+                                <p:column headerText="Descrição" width="300">
+                                    <h:outputLabel value="#{h.text}" styleClass="font-courier" escape="false"/>
+                                </p:column>
+
+                                <p:column headerText="Nivel" width="37" style="text-align: center">
+                                    <p:outputLabel value="#{h.severity.getText()}" rendered="#{h.severity == 'INFO'}" style="color: #2980b9; font-weight: bold"/>
+                                    <p:outputLabel value="#{h.severity.getText()}" rendered="#{h.severity == 'WARN'}" style="color: #e67e22; font-weight: bold"/>
+                                    <p:outputLabel value="#{h.severity.getText()}" rendered="#{h.severity == 'ERROR'}" style="color: #c0392b; font-weight: bold"/>
+                                </p:column>
+                            </p:dataTable>
+
+                        </p:panel>  
+                        <br />
+                        <p:panel header="Arquivos de Saída">
+                            <center>
+                                <p:dataTable value="#{workflowHistoryBean.workflowOutputFiles}" style="width: 500px"
+                                             var="out" emptyMessage="Sem arquivos para mostrar">
+                                    <p:column headerText="Nome" width="100" style="font-weight: bold">
+                                        <p:outputLabel value="#{out.outputFilename}" />
+                                    </p:column>
+
+                                    <p:column headerText="Download" width="30" style="text-align: center">
+                                        <p:commandButton icon="ui-icon-arrowstop-1-s" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);">
+                                            <p:fileDownload value="#{workflowHistoryBean.getDownloadURL(out.outputFilename)}"/>
+                                        </p:commandButton>
+                                        <!--<a href="#{workflowHistoryBean.getDownloadURL(out.outputFilename)}">Download</a>-->
+                                    </p:column>
+                                </p:dataTable>
+                            </center>
+                        </p:panel>
+
+                        <f:facet name="footer">
+                            <p:commandButton value="Atualizar" action="#{workflowHistoryBean.updateWorkflowHistory()}" update="history_panel" icon="ui-icon-arrowrefresh-1-w"/>
+                        </f:facet>
+                    </p:panel>
+                </p:panel>
+            </h:form>
+        </ui:define>
+
+    </ui:decorate>
+
+    <!-- ***************************************************************************************************************** -->
+    <!--                                                        DIALOGS                                                    -->
+    <!-- ***************************************************************************************************************** -->
+    <!-- File Dialog: Used for the user to pick inputs -->
+    <p:dialog widgetVar="label_dlg" showEffect="fade" header="Legenda de Status"
+              hideEffect="fade" modal="true" closable="true">
+        <p:panel>
+            <center>
+                <p:panelGrid columns="3" style="margin-top: 10px">
+                    <f:facet name="header">
+                        <p:outputLabel value="Legenda de Status" style="color: #2980b9; font-weight: bold; font-size: 14px"/>
+                    </f:facet>
+
+                    <!-- Header -->
+                    <p:outputLabel value="Status" style="font-weight: bold; font-size: 14px"/>
+                    <p:outputLabel value="Nivel" style="font-weight: bold; font-size: 14px"/>
+                    <p:outputLabel value="Legenda" style="font-weight: bold; font-size: 14px"/>
+
+                    <!-- Elements -->
+                    <p:outputLabel value="Workflow Pausado" style="color: #7f8c8d; font-weight: bold"/>
+                    <p:outputLabel value="Informativo" style="font-weight: bold"/>
+                    <p:outputLabel value="Foi requisitada a pausa na execucao do Workflow" />
+
+                    <p:outputLabel value="Workflow Pendente" style="color: #2980b9; font-weight: bold"/>
+                    <p:outputLabel value="Informativo" style="font-weight: bold"/>
+                    <p:outputLabel value="Seu workflow esta agurdando execucao pelo BioNimbuZ" />
+
+                    <p:outputLabel value="Workflow em Execução" style="color: #2980b9; font-weight: bold"/>
+                    <p:outputLabel value="Informativo" style="font-weight: bold"/>
+                    <p:outputLabel value="O workflow esta em plena execucao" />
+
+                    <p:outputLabel value="Workflow Finalizado com Sucesso" style="color: #27ae60; font-weight: bold"/>
+                    <p:outputLabel value="Informativo" style="font-weight: bold"/>
+                    <p:outputLabel value="Seu workflow foi finalizado sem alertas e sem erros" />
+
+                    <p:outputLabel value="Workflow Finalizado com Alertas" style="color: #f39c12; font-weight: bold"/>
+                    <p:outputLabel value="Alerta" style="font-weight: bold"/>
+                    <p:outputLabel value="Alertas foram lancados durante a execucao deste workflow" />
+
+                    <p:outputLabel value="Workflow Finalizado com Erros" style="color: #c0392b; font-weight: bold"/>
+                    <p:outputLabel value="Erro" style="font-weight: bold"/>
+                    <p:outputLabel value="Erros nao permitiram que este workflow terminasse com sucesso" />
+
+                    <p:outputLabel value="Workflow Parado com Erros" style="color: #c0392b; font-weight: bold"/>
+                    <p:outputLabel value="Erro" style="font-weight: bold"/>
+                    <p:outputLabel value="Estado parcial com erros. Duas acoes podem ser tomadas: finalizar o workflow ou permitir que continue com erros." />
+                </p:panelGrid>
+            </center>
+        </p:panel>
+    </p:dialog>
+    <script type="text/javascript">
+        function start() {
+            PF('statusDialog').show();
+        }
+
+        function stop() {
+            PF('statusDialog').hide();
+        }
+    </script>
+</html>
+

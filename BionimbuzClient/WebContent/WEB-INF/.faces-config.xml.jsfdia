@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PROCESS model-entity="JSFProcess">
+ <PROCESS-ITEM NAME="rules:#pages#public#login.xhtml"
+  PATH="/pages/public/login.xhtml" SHAPE="32,17,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#pages#public#login.xhtml:0" NAME="item"
+   PATH="/pages/public/login.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="success::#pages#private#home.xhtml"
+    NAME="output" PATH="/pages/private/home.xhtml"
+    TARGET="rules:#pages#private#home.xhtml" TITLE="success" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="sign_up::#pages#public#sign_up.xhtml"
+    NAME="output1" PATH="/pages/public/sign_up.xhtml"
+    TARGET="rules:#pages#public#sign_up.xhtml" TITLE="sign_up" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="sign_up_success::#pages#public#sign_in_success.xhtml"
+    NAME="output2" PATH="/pages/public/sign_in_success.xhtml"
+    TARGET="rules:#pages#public#sign_in_success.xhtml"
+    TITLE="sign_up_success" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="sign_up_error::#pages#public#sign_up_error.xhtml" NAME="output3"
+    PATH="/pages/public/sign_up_error.xhtml"
+    TARGET="rules:#pages#public#sign_up_error.xhtml"
+    TITLE="sign_up_error" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#pages#*" PATH="/pages/*" SHAPE="32,129,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#pages#*:0" NAME="item" PATH="/pages/*" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="error::#pages#error#error_page.xhtml"
+    NAME="output" PATH="/pages/error/error_page.xhtml"
+    TARGET="rules:#pages#error#error_page.xhtml" TITLE="error" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="server_offline::#pages#error#server_offline.xhtml"
+    NAME="output1" PATH="/pages/error/server_offline.xhtml"
+    TARGET="rules:#pages#error#server_offline.xhtml"
+    TITLE="server_offline" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="home::#pages#private#home.xhtml"
+    NAME="output2" PATH="/pages/private/home.xhtml"
+    TARGET="rules:#pages#private#home.xhtml" TITLE="home" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="submit_job::#pages#private#submit_job.xhtml"
+    NAME="output3" PATH="/pages/private/submit_job.xhtml"
+    TARGET="rules:#pages#private#submit_job.xhtml" TITLE="submit_job" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="file_list::#pages#private#file_list.xhtml"
+    NAME="output4" PATH="/pages/private/file_list.xhtml"
+    TARGET="rules:#pages#private#file_list.xhtml" TITLE="file_list" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="cancel_job::#pages#private#cancel_job.xhtml"
+    NAME="output5" PATH="/pages/private/cancel_job.xhtml"
+    TARGET="rules:#pages#private#cancel_job.xhtml" TITLE="cancel_job" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT
+    ID="download_file::#pages#private#download_file.xhtml"
+    NAME="output6" PATH="/pages/private/download_file.xhtml"
+    TARGET="rules:#pages#private#download_file.xhtml"
+    TITLE="download_file" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#*" PATH="/*" SHAPE="32,641,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#*:0" NAME="item" PATH="/*" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="logout::#pages#public#login.xhtml"
+    NAME="output" PATH="/pages/public/login.xhtml"
+    TARGET="rules:#pages#public#login.xhtml" TITLE="logout" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#pages#private#edit_personal_data.xhtml"
+  PATH="/pages/private/edit_personal_data.xhtml" SHAPE="288,689,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#pages#private#file_list.xhtml"
+  PATH="/pages/private/file_list.xhtml" SHAPE="272,433,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#pages#private#download_file.xhtml"
+  PATH="/pages/private/download_file.xhtml" SHAPE="272,545,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#pages#private#submit_job.xhtml"
+  PATH="/pages/private/submit_job.xhtml" SHAPE="272,321,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#pages#private#home.xhtml"
+  PATH="/pages/private/home.xhtml" SHAPE="288,913,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#pages#error#error_page.xhtml"
+  PATH="/pages/error/error_page.xhtml" SHAPE="304,145,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#pages#error#server_offline.xhtml"
+  PATH="/pages/error/server_offline.xhtml" SHAPE="304,33,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#pages#error#*" PATH="/pages/error/*"
+  SHAPE="32,1105,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:#pages#error#*:0" NAME="item"
+   PATH="/pages/error/*" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="login::#pages#public#login.xhtml"
+    NAME="output" PATH="/pages/public/login.xhtml"
+    TARGET="rules:#pages#public#login.xhtml" TITLE="login" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#pages#private#cancel_job.xhtml"
+  PATH="/pages/private/cancel_job.xhtml" SHAPE="320,817,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#pages#public#sign_up_error.xhtml"
+  PATH="/pages/public/sign_up_error.xhtml" SHAPE="320,1329,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#pages#public#sign_in_success.xhtml"
+  PATH="/pages/public/sign_in_success.xhtml" SHAPE="320,881,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#pages#public#sign_up.xhtml"
+  PATH="/pages/public/sign_up.xhtml" SHAPE="320,881,0,0" model-entity="JSFProcessGroup"/>
+</PROCESS>

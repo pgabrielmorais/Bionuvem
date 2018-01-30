@@ -1,0 +1,213 @@
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+									JOBCONTROLLER									
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+- Responsabilidades:
+	o	Manter controle sobre os Jobs em execução na Nuvem
+		Como:
+			> Na inicialização do sistema, verificar no banco de dados quais Jobs ficaram no estado EM_EXECUÇÃO.
+			> Verificar se estes Jobs continuam em execução na Nuvem.
+			> Caso não estejam em execução, alterar seu estado no Banco de Dados.
+			> Quando um usuário submeter um job para ser executado, criar um novo registro no Banco de Dados
+			> Quando um Job finalizar sua execução, atualizar seu estado no Banco de Dados.
+	o	Servir como repositório sobre informações sobre a execução dos Jobs
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+									   TIMEOUTS
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+- De sessão:
+	- De tempos em tempos, deverá ser verificado o último acesso dos usuários 
+	- Caso o horário do último acesso ultrapassar um determinado valor, esse usuário será desconectado do Servidor,
+	  devendo assim realizar o Login novamente.
+
+Como calcular a diferença entre dois horários:
+	- http://www.mkyong.com/java/java-time-elapsed-in-days-hours-minutes-seconds/
+Cloud Design Pattern
+	- Retry Pattern: https://msdn.microsoft.com/en-us/library/dn589788.aspx
+	- Federated Identity Pattern: https://msdn.microsoft.com/en-us/library/dn589790.aspx
+	- Circuit Breaker Pattern: https://msdn.microsoft.com/en-us/library/dn589784.aspx
+	- LIVRO: Microsoft Cloud Design Pattern - Prescriptive Architecture Guidance for Cloud Applications
+INTERCEPTOR (http://www.mastertheboss.com/jboss-frameworks/resteasy/resteasy-interceptors-tutorial)
+(Atualizado: http://howtodoinjava.com/2013/07/25/jax-rs-2-0-resteasy-3-0-2-final-security-tutorial/)
+	- No Interceptor, verificar o método:
+		- método = "login": Não realizar a verificação (Se login realizado com sucesso, lembrar de adicionar este usuário no mapa)
+		- método != "login": Realizar a verificação de usuário logado
+										----+------
+											|
+											|
+											|
+		+-----------------------------------+
+		|
+		|
+		V
+VERIFICAÇÃO:
+	- Segurança mantém um mapa (ConcurrentHashMap) contendo <login, boolean, lastAccess> que diz se um usuário está logado ou não, e em que momento foi seu último acesso
+	- Quando um usuário efetuar login, esse mapa será atualizado incluindo este usuário e tornando true na posição de logado
+	- Sempre que um usuário requisitar algum serviço do BioNimbuz, será verificado se a posição do mapa está verdadeira
+	- Se sim, o usuário realiza a ação
+	- Se não, será enviada uma resposta à aplicação dizendo que o usuário não está mais logado ----> Redirecionar para tela de login
+	- O timeout de sessão será 5 minutos, ou seja, a lista de usuários logados deve ser atualizada a cada 5 minutos.
+	- Se, no momento de verificação de timeout, o horário atual menos o horário do último acesso for maior que 5 minutor, atualiza-se o booleano do mapa de usuários logados
+
+	UTILIZAR Quartz PARA TIMEOUT DE SESSÃO (http://www.mkyong.com/java/quartz-2-scheduler-tutorial/)
+	
+	public class LoggedUserVerifier implements Job {
+		private static ConcurrentHashMap<?, ?> loggedUsers = new ConcurrentHashMap<>();
+		private Logger logger = Logger.getLogger("Logger criado");
+		
+		// Access only via static methods
+		private LoggedUserVerifier() {}
+			
+		@Override
+		public void execute(JobExecutionContext context) throws JobExecutionException {
+	
+		// Verificar a cada 5 minutos e realizar o timeout das sessões
+		}
+	
+		public static ConcurrentHashMap getLoggedUsers () {
+			return this.loggedUsers;
+		}
+	
+		public static void addLoggedUser() {
+			loggedUsers.put(?,?);
+		}
+		
+		public static void removeLoggedUser() {
+			loggedUsers.remove(?,?);
+		}
+	}
+	  
+- De Token de Segurança
+	- Todo token de usuário deve ter um Timeout associado.
+	- Caso estoure o Timeout, o usuário deve ser desconectado do Servidor, devendo assim realizar o Login novamente.
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+									 AUTENTICAÇÃO
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Sites:
+http://www.restapitutorial.com/media/RESTful_Best_Practices-v1_1.pdf
+http://stackoverflow.com/questions/15490265/rest-web-service-authentication-token-implementation
+http://docs.oracle.com/cd/E19575-01/820-3746/ghhsk/index.html
+https://msdn.microsoft.com/en-us/library/ff650503.aspx
+http://howtodoinjava.com/2013/07/22/how-to-generate-secure-password-hash-md5-sha-pbkdf2-bcrypt-examples/
+http://stackoverflow.com/questions/2375541/password-verification-with-pbkdf2-in-java
+http://stackoverflow.com/questions/20047418/pbkdf2-with-hmac-in-java
+http://blog.cloudfoundry.org/2012/10/09/securing-restful-web-services-with-oauth2/
+		
+	1. Criar uma classe que será usada para realizar a Autenticação (class SecurityToken). 
+	2. Adicionar um atributo de segurança na classe User -> SecurityToken securityToken;
+	3. Esse campo será utilizado para efetuar a autenticação do usuário em cada requisição da seguinte maneira:
+		a. Ao efetuar o Login, o objeto de usuário que será passado ao servidor (apenas com Login e 
+		   Senha setados) será enviado com o atributo securityToken vazio.
+		b. Servidor efetua a Autenticação a partir da senha enviada.
+		c. Servidor calcula o token do usuário da seguinte forma:
+			* String token = bCrypt(userId + login + timestamp);
+		d. Servidor seta o campo securityToken e o inclui na resposta que será enviada ao cliente
+		e. Servidor envia a resposta.
+		f. Cliente recebe a resposta e seta o securityToken do Usuário que está logado.
+	4. A partir deste momento, à cada requisição que o cliente disparar para o Servidor, deverá ser verificado 
+
+Artigos:
+
+Web Security:
+	- Automatically Securing Web 2.0 Applications through Replicated Execution
+o K. Vikram, Abhishek Prateek and Benjamin Livshits
+	- Browser Interfaces and Extended Validation SSL Certificates: An Empirical Study
+o Robert Biddle, P.C. van Oorschot, Andre S. Patrickm Jennifer Sobey and Tara Whalen
+	- Effectively and Securely using the Cloud Computing Paradigm.
+o P. Mell and T. Grance
+	- NIST definition of Cloud Computing. NIST
+o P. Mell and T. Grance
+	- Cloud Computing security - Raining on the trendy new parade
+	- A. Stamos, A. Becherer and N. Wilcox
+		
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+								  EXECUÇÃO DE UM JOB
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+LADO CLIENTE:
+	- Página de montagem do workflow
+		- Página contendo os possíveis serviços (programas) disponíveis para execução.
+		- Para cada software, pedir os dados de entrada para o Job. Campos:
+			- String id
+			- String localId
+			- Long serviceId: Identificador do serviço ("1111" - bowtie, "", ...)
+			- String args: Argumentos para execução do serviço
+			- List<Pair<>> inputs = new ArrayList<Pair<String, Long>>(): Nome do arquivo e tamanho do mesmo
+			- List<String> outputs = new ArrayList<String>(): Lista de arquivos de output.
+			- Long timestamp: Horário de início do Job.
+		- Ao final, mostrar o workflow final e pedir confirmação do usuário		
+	- Enviar JobInfo via Rest para o Servidor
+	
+LADO SERVIDOR:
+	- Criar um Resource REST para receber a requisição do Job
+	- Acessar o ZooKeeper
+	- Criar um novo PersistentZNode 
+	
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+								  TODO
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Implementar PING antes de cada requisição disparada ao servidor, para evitar requisições que não terão retorno. Para isso:
+	- Modificar a interface Action para public abstract class Action.
+	- implementar o método ping, que retornará um boolean (true, caso servidor online, false, caso contrário)
+	- Nesse método, lançar uma exceção ServerOfflineException caso o retorno de ping() seja diferente de 200
+	
+	/**
+	 * Exception used to indicate that the Server is offline
+	 */
+	public class ServerOfflineException extends Exception {
+		public ServerOfflineException(String message) {
+			super(message);
+		}
+	}
+	
+	/**
+	 * Ping the server to know if it is online to request it properly
+	 * @return boolean
+	 */
+	public boolean ping () {
+		Response response = target.get();
+		
+		if (response.getStatus() != 200) {
+			throw new ServerOfflineException("Server is offline. Unable to continue request");
+		}
+		return true;
+	}
+	
+	- Adicionar a verficação a seguir antes de toda requisição feita ao servido: 
+	if (!ping()) {
+		... lança exceção
+	}
+	
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+					Job Workflow
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Job
+	- Um job é uma unidade de trabalho que pode compreender diversos passos. Cada passo é especificado via um JobControlStep
+	- O sistema utiliza o JobEntrySystem para receber jobs, escaloná-los, processá-los e controlar seu Outputs.
+	- Fluxo do processamento de um Job:
+	
+	 Job Workflow composto por diversos Jobs, recebidos da aplicação cliente:	 
+		 -> Recebidos no JobEntrySystem: Realiza verificações e valida o Job (Sistema Online, arquivos 
+			de entrada existem, parâmetros de execução válidos...)
+		 -> Interpretação do Job 
+		 -> Enfileiramento de Jobs para execução 
+		 -> Execução do Job (Levando-se em conta os inputs e outputs)
+		 -> Retorno dos dados para a aplicação
+		 -> Salva-se o Log da execução e realiza-se o purge dos recursos alocados para sua execução
+
+Composição de um JobWorkflow
+	- Identificador de Workflow
+	- Identificador de Usuário que requisitou sua execução
+	- Lista de Jobs (Steps do workflow)
+	- Lista de Outputs <Step, Output>
+	
+Composição de um Job
+	- Identificador do Job
+	- Identificador do Usuário
+	- Identificador do Workflow ao qual este Job pertence
+	- Programa (Bowtie, Sam2Bed, ...)
+	- Lista de arquivos de Entrada

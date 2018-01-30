@@ -1,0 +1,98 @@
+@CHARSET "US-ASCII";
+
+@font-face {
+    font-family: 'OpenSans';
+    src: url('#{resource['font/Exo.otf']}');
+}
+
+@font-face {
+    font-family: 'Consola';
+    src: url('#{resource['font/consola.ttf']}');
+}
+
+body {
+    font-size: 11px;
+}
+
+.ui-widget {
+    font-family: OpenSans;
+}
+
+.ui-widget .ui-widget {
+    font-family: OpenSans;
+}
+
+.workflow_btn {
+    border: 1px solid !important;
+    border-color: #4599d3 !important;
+    background: #ffffff !important;
+    color: #4599d3 !important;
+    line-height: 25px !important;
+    border-radius: 2px !important;
+    box-shadow: none !important;
+    transition: 0.5s !important;
+    display: block !important;
+    width: 150px !important;
+    margin: 0 auto !important;
+    margin-top: 8px !important;
+    margin-bottom: 8px !important;
+}
+
+.workflow_btn:hover {
+    background-color: #4599d3 !important;
+    color: #ffffff !important;
+}
+
+.controller_btn {
+    border: 1px solid !important;
+    border-color: #f77462 !important;
+    background: #ffffff !important;
+    color: #f77462 !important;
+    line-height: 25px !important;
+    border-radius: 2px !important;
+    box-shadow: none !important;
+    transition: 0.5s !important;
+    width: 200px !important;
+    margin: 0 auto !important;
+    margin-top: 8px !important;
+    margin-bottom: 8px !important;
+    margin-left: 8px !important;
+    margin-right: 8px !important;
+}
+
+.controller_btn:hover {
+    background-color: #f77462 !important;
+    color: #ffffff !important;
+}
+
+.ui-ring-item {
+    width:  15em !important;
+    height: 8em !important;
+    background-color: #5BAAF3 !important;
+}
+
+.diagram-column {
+    width: 100px;
+}
+
+.ui-wizard-step-title {
+    font-size:12px !important;
+}
+
+/* ===== Diagram Element Style ===== */
+.ui-diagram-element {
+    border: 0.2em solid #5BAAF3;
+    width: 10em;
+    height: 4em;
+    line-height: 4em;
+    text-align: center;
+}
+
+.icon-plus {
+    border-radius: 0px !important;
+    background-image: url('#{resource['icon/custom-plus-icon-2.png']}') !important;
+}
+
+.font-courier {
+    font-family: Consola !important; 
+}

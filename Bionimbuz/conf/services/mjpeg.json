@@ -1,0 +1,6 @@
+{
+    "id": 6,
+    "name": "mjpeg",
+    "info": "Generates a JPEG image file from a FITS file.",
+    "path": "./data/programs/mjpeg.sh"
+}

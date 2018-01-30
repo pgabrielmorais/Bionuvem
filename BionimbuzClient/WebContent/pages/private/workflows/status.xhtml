@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <ui:decorate template="/resources/templates/template.xhtml">	
+
+        <!-- Center Content -->
+        <ui:define name="conteudo_centro">
+            <h:form>
+                <p:panel header="Status dos Workflows Em Execução/Finalizados">
+                    <p:panel>
+                        Visualize o status de seus Workflows.
+                    </p:panel>
+                    <br />
+                    <p:fieldset legend="Workflows">
+                        <p:dataTable value="#{workflowStatusBean.userWorkflows}" var="w" paginator="true" 
+                                     rows="10" emptyMessage="Nenhum workflow">
+                            <f:facet name="header">
+                                Lista de Workflows
+                            </f:facet>
+
+                            <p:column headerText="Id" style="text-align: center">
+                                <p:outputLabel value="#{w.id}" style="font-weight: bold"/>
+                            </p:column>
+
+                            <p:column headerText="Descricao">
+                                <p:outputLabel value="#{w.description}"/>
+                            </p:column>
+
+                            <p:column headerText="Data de criacao" style="text-align: center">
+                                <p:outputLabel value="#{w.creationDatestamp}"/>
+                            </p:column>
+
+                            <p:column headerText="Status" style="text-align: center">
+                                <p:commandButton icon="ui-icon-circle-zoomin" action="#{workflowHistoryBean.selectWorkflow(w)}" />
+                            </p:column>
+                        </p:dataTable>
+                    </p:fieldset>
+                </p:panel>
+            </h:form>
+        </ui:define>
+
+    </ui:decorate>
+</html>

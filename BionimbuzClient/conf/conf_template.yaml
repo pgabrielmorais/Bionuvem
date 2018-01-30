@@ -1,0 +1,21 @@
+# BioNimbuZ Web Application Configuration #
+
+# BionimbuzCore REST address (need HTTP://)
+bionimbuz-address: "http://127.0.0.1:8181"
+
+#path application web
+root-path: "/path/to/BionimbuzClient/"
+
+#application address
+address: "127.0.0.1"
+
+# Temporary workflow folder
+tmp-workflow-folder: "tmp/"
+
+# Folder that authentication
+buckets-auth-folder: "WebContent/resources/apiCredentials/"
+
+ # Storage mode 
+ # 0 - localhost 
+ # 1 - cloud
+storage-mode: "0"

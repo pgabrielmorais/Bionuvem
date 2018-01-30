@@ -1,0 +1,57 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+    <h:head>
+        <link rel="shortcut icon" type="image/x-icon" href="#{request.contextPath}/resources/favicon/favicon.ico" />
+        <h:outputStylesheet library="css" name="login.css" />
+        <style>
+            body {
+                background-image: url("#{request.contextPath}/resources/img/bground.jpg");
+            }
+        </style>
+    </h:head>
+
+    <h:body>
+
+        <!-- User not found -->
+        <h:panelGroup layout="block" styleClass="user-not-found" rendered="#{param.not_found}">
+            <center>
+                Usuário/Senha incorretos
+            </center>
+        </h:panelGroup>
+
+        <!-- Internal server error -->
+        <h:panelGroup layout="block" styleClass="internal-error" rendered="#{param.internal_error}">
+            <center>
+                Erro interno do servidor
+            </center>
+        </h:panelGroup>
+
+        <div class="centered">
+            <h:form>
+                <p:growl id="growl" autoUpdate="true" />
+                <p:panel styleClass="login-panel">
+                    <center>
+                        <br /> <br />
+                        <h:graphicImage value="/resources/img/logo_bionimbuz.jpg" />
+                        <br /> <br /> <br />
+                        <h:panelGrid columns="2" cellpadding="4" >
+                            <p:inputText placeholder="Login" value="#{sessionBean.user.login}" required="true" requiredMessage="Login em branco"/>
+                            <br />
+                            <p:password placeholder="Senha" value="#{sessionBean.user.password}" required="true" requiredMessage="Senha em branco"/>
+                        </h:panelGrid>
+                        <br />
+                        <h:commandButton value="Entrar" style="width: 200px" action="#{sessionBean.login()}" styleClass="btn" />
+                        <br />
+                        <p:commandLink value="Inscreva-se aqui" action="sign_up?faces-redirect=true" style="color: gray; font-size: 110%" immediate="true"/>
+                        <br /> <br />
+                    </center>
+                </p:panel>
+            </h:form>
+        </div>
+    </h:body>
+</html>

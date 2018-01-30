@@ -1,0 +1,57 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <ui:decorate template="/resources/templates/template.xhtml">
+
+        <!-- Center Content -->
+        <ui:define name="conteudo_centro">
+            <h:form>
+                <p:panel header="Download de Arquivos">
+                    <p:panel>
+                        Escolha o arquivo para realizar o download
+                    </p:panel>
+                    <br />
+                    <p:panel>
+                        <p:dataTable value="#{sessionBean.loggedUser.files}" var="f" style="text-align: center">
+                            <f:facet name="header">Lista de Arquivos</f:facet>
+
+                            <p:column headerText="Arquivo" width="200" style="text-align: center">
+                                <h:outputText value="#{f.name}" />
+                            </p:column>
+
+                            <p:column headerText="Tamanho" width="200" style="text-align: center">
+                                <h:outputText value="#{f.size/1000} kb"  />
+                            </p:column>
+
+                            <p:column headerText="Data e horário de Upload" width="200" style="text-align: center">
+                                <h:outputText value="#{f.uploadTimestamp}" />
+                            </p:column>
+
+                            <p:column headerText="Download" width="50" style="text-align: center">
+                                <p:commandButton icon="ui-icon-arrowstop-1-s" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);">
+                                    <p:fileDownload value="#{workflowHistoryBean.getDownloadURL(f.name)}"/>
+                                </p:commandButton>
+                            </p:column>
+                        </p:dataTable>
+
+                    </p:panel>
+                </p:panel>
+            </h:form>
+        </ui:define>
+
+    </ui:decorate>
+    <script type="text/javascript">
+        function start() {
+            PF('statusDialog').show();
+        }
+
+        function stop() {
+            PF('statusDialog').hide();
+        }
+    </script>
+</html>
+

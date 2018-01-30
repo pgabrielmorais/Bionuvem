@@ -1,0 +1,170 @@
+
+
+----------------------------------------
+Data: 14/10/2017
+Hora: 17:36:21.036
+[Exception] Endereço já em uso (Bind failed)
+
+----------------------------------------
+Data: 14/10/2017
+Hora: 17:53:57.053
+[Exception] Endereço já em uso (Bind failed)
+
+----------------------------------------
+Data: 14/10/2017
+Hora: 18:29:01.029
+[Exception] Endereço já em uso (Bind failed)
+
+----------------------------------------
+Data: 14/10/2017
+Hora: 18:30:28.030
+[Exception] Endereço já em uso (Bind failed)
+
+----------------------------------------
+Data: 14/10/2017
+Hora: 18:32:26.032
+[Exception] Endereço já em uso (Bind failed)
+
+----------------------------------------
+Data: 14/10/2017
+Hora: 18:35:30.035
+[Exception] Endereço já em uso (Bind failed)
+
+----------------------------------------
+Data: 20/12/2017
+Hora: 22:57:47.057
+[Exception] Endereço já em uso (Bind failed)
+
+----------------------------------------
+Data: 20/12/2017
+Hora: 22:59:01.059
+[Exception] Endereço já em uso (Bind failed)
+
+----------------------------------------
+Data: 26/12/2017
+Hora: 17:44:55.044
+[Exception] Endereço já em uso (Bind failed)
+
+----------------------------------------
+Data: 26/12/2017
+Hora: 17:47:32.047
+[Exception] Endereço já em uso (Bind failed)
+
+----------------------------------------
+Data: 26/12/2017
+Hora: 17:59:59.059
+[Exception] Endereço já em uso (Bind failed)
+
+----------------------------------------
+Data: 02/01/2018
+Hora: 17:29:23.029
+[Exception] Endereço já em uso (Bind failed)
+
+----------------------------------------
+Data: 03/01/2018
+Hora: 22:22:41.022
+[Exception] Endereço já em uso (Bind failed)
+
+----------------------------------------
+Data: 08/01/2018
+Hora: 18:55:03.055
+[Exception] Endereço já em uso (Bind failed)
+
+----------------------------------------
+Data: 08/01/2018
+Hora: 19:10:57.010
+[Exception] Endereço já em uso (Bind failed)
+
+----------------------------------------
+Data: 08/01/2018
+Hora: 19:18:06.018
+[Exception] Endereço já em uso (Bind failed)
+
+----------------------------------------
+Data: 09/01/2018
+Hora: 23:43:03.043
+[Exception] Endereço já em uso (Bind failed)
+
+----------------------------------------
+Data: 09/01/2018
+Hora: 23:49:10.049
+[Exception] Endereço já em uso (Bind failed)
+
+----------------------------------------
+Data: 09/01/2018
+Hora: 23:55:52.055
+[Exception] Endereço já em uso (Bind failed)
+
+----------------------------------------
+Data: 10/01/2018
+Hora: 22:45:50.045
+[Exception] Endereço já em uso (Bind failed)
+
+----------------------------------------
+Data: 11/01/2018
+Hora: 19:57:51.057
+[Exception] Endereço já em uso (Bind failed)
+
+----------------------------------------
+Data: 11/01/2018
+Hora: 20:09:52.009
+[Exception] Endereço já em uso (Bind failed)
+
+----------------------------------------
+Data: 12/01/2018
+Hora: 16:29:42.029
+Error while calling watcher java.lang.UnsupportedOperationException: Not supported yet.
+	at br.unb.cic.bionimbuz.controller.usercontroller.UserController.event(UserController.java:83)
+	at br.unb.cic.bionimbuz.services.UpdatePeerData.process(UpdatePeerData.java:59)
+	at org.apache.curator.framework.imps.NamespaceWatcher.process(NamespaceWatcher.java:61)
+	at org.apache.zookeeper.ClientCnxn$EventThread.processEvent(ClientCnxn.java:519)
+	at org.apache.zookeeper.ClientCnxn$EventThread.run(ClientCnxn.java:495)
+
+
+----------------------------------------
+Data: 12/01/2018
+Hora: 16:29:42.029
+Error while calling watcher java.lang.UnsupportedOperationException: Not supported yet.
+	at br.unb.cic.bionimbuz.controller.usercontroller.UserController.event(UserController.java:83)
+	at br.unb.cic.bionimbuz.services.UpdatePeerData.process(UpdatePeerData.java:59)
+	at org.apache.curator.framework.imps.NamespaceWatcher.process(NamespaceWatcher.java:61)
+	at org.apache.zookeeper.ClientCnxn$EventThread.processEvent(ClientCnxn.java:519)
+	at org.apache.zookeeper.ClientCnxn$EventThread.run(ClientCnxn.java:495)
+
+
+----------------------------------------
+Data: 12/01/2018
+Hora: 16:29:42.029
+Error while calling watcher java.lang.UnsupportedOperationException: Not supported yet.
+	at br.unb.cic.bionimbuz.controller.usercontroller.UserController.event(UserController.java:83)
+	at br.unb.cic.bionimbuz.services.UpdatePeerData.process(UpdatePeerData.java:59)
+	at org.apache.curator.framework.imps.NamespaceWatcher.process(NamespaceWatcher.java:61)
+	at org.apache.zookeeper.ClientCnxn$EventThread.processEvent(ClientCnxn.java:519)
+	at org.apache.zookeeper.ClientCnxn$EventThread.run(ClientCnxn.java:495)
+
+
+----------------------------------------
+Data: 12/01/2018
+Hora: 16:29:42.029
+Error while calling watcher java.lang.UnsupportedOperationException: Not supported yet.
+	at br.unb.cic.bionimbuz.controller.usercontroller.UserController.event(UserController.java:83)
+	at br.unb.cic.bionimbuz.services.UpdatePeerData.process(UpdatePeerData.java:59)
+	at org.apache.curator.framework.imps.NamespaceWatcher.process(NamespaceWatcher.java:61)
+	at org.apache.zookeeper.ClientCnxn$EventThread.processEvent(ClientCnxn.java:519)
+	at org.apache.zookeeper.ClientCnxn$EventThread.run(ClientCnxn.java:495)
+
+
+----------------------------------------
+Data: 15/01/2018
+Hora: 17:35:54.035
+[Exception] Endereço já em uso (Bind failed)
+
+----------------------------------------
+Data: 23/01/2018
+Hora: 16:26:56.026
+File integrity verified: Error on file uploading.
+
+----------------------------------------
+Data: 23/01/2018
+Hora: 17:14:56.014
+File integrity verified: Error on file uploading.

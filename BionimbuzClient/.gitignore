@@ -1,0 +1,15 @@
+*~
+/target/
+/uploaded-files/
+/zookeeper.out
+/nbproject/
+/.metadata/
+/.idea/
+/BionimbuzClient.iml
+/.settings/
+.classpath
+.project
+/bin/
+
+# Arquivos de configuração com informações sensíveis
+/conf/conf.yaml

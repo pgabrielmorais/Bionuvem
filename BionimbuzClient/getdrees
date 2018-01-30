@@ -1,0 +1,7 @@
+HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        String ipAddres =request.getHeader("X-FORWARDED-FOR");
+    
+        if(ipAddres == null){
+            ipAddres=request.getRemoteAddr();
+        }
+        System.out.println("ip: "+ipAddres);

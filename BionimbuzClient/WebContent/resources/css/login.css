@@ -1,0 +1,160 @@
+@CHARSET "US-ASCII";
+
+@import
+url(http://fonts.googleapis.com/css?family=Open+Sans:300,400,700);
+
+body {
+    font-size: 12px;
+    background: #34495e;
+    background-image: url("resources/img/bground.jpg");
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    /* background-color: #35383D; */
+}
+
+input {
+    font-family: 'Open Sans', sans-serif !important;
+    text-align: center;
+    border-radius: 0px !important;
+    font-weight: 10;
+    padding: 10px 0 !important;
+    width: 250px;
+    transition: border .5s;
+}
+
+input:focus {
+    box-shadow: none;
+}
+
+.header {
+    margin-top: 10;
+    heigth: 5%;
+    width: 100%;
+    background-color: #2980B9;
+    heigth: 5%;
+    box-shadow: 0px 0px 20px #0a0a0a;
+}
+
+.centered {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    -webkit-transform: translate(-50%, -50%);
+    box-shadow: 0px 0px 20px #0a0a0a;
+}
+
+.btn {
+    font-family: 'Open Sans', sans-serif;
+    border: 1px solid;
+    border-color: #4599d3;
+    background: #ffffff;
+    color: #4599d3;
+    font-size: 22px;
+    line-height: 25px;
+    border-radius: 2px;
+    box-shadow: none;
+    transition: 0.5s;
+    display: block;
+    width: 250px;
+    margin: 0 auto;
+}
+
+.btn:hover {
+    background-color: #4599d3;
+    color: #ffffff;
+}
+
+.user-not-found {
+    font-family: 'Open Sans', sans-serif !important;
+    position: fixed;
+    top: 0%;
+    left: 0%;
+    heigth: 50px;
+    padding: 15px 0;
+    background: #2980b9;
+    width: 100%;
+    display: block;
+    color: white;
+    font-size: 18px;
+    box-shadow: 0px 0px 20px #0a0a0a;
+}
+
+.internal-error {
+    font-family: 'Open Sans', sans-serif !important;
+    position: fixed;
+    top: 0%;
+    left: 0%;
+    heigth: 50px;
+    padding: 15px 0;
+    background: #e74c3c;
+    width: 100%;
+    display: block;
+    color: white;
+    font-size: 18px;
+    box-shadow: 0px 0px 20px #0a0a0a;
+}
+
+.ui-growl {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 301px;
+    z-index: 9999;
+    color: white !important;
+}
+
+.ui-growl-title {
+    font-family: 'Open Sans', sans-serif;
+    text-align: center;
+}
+
+.ui-growl-message p {
+    font-family: 'Open Sans', sans-serif;
+}
+
+.ui-growl-image {
+    background-image: url('../resources/img/icon-close2.png');
+    width: 50px;
+    height: 50px;
+    right: 5%;
+    float: left;
+}
+
+.login-panel {
+    background: #ffffff;
+}
+
+.ui-inputfield,.ui-widget-content .ui-inputfield,.ui-widget-header .ui-inputfield
+{
+    cursor: default;
+    background: none #ffffff;
+    border: 1px solid #cccccc;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    -webkit-transition: border linear 0.2s, box-shadow linear 0.2s;
+    -moz-transition: border linear 0.2s, box-shadow linear 0.2s;
+    -ms-transition: border linear 0.2s, box-shadow linear 0.2s;
+    -o-transition: border linear 0.2s, box-shadow linear 0.2s;
+    transition: border linear 0.2s, box-shadow linear 0.2s;
+}
+
+.ui-inputfield.ui-state-focus,.ui-widget-content .ui-inputfield.ui-state-focus,.ui-widget-header .ui-inputfield.ui-state-focus
+{
+    border-color: rgba(82, 168, 236, 0.8);
+    outline: 0;
+    outline: thin dotted \9;
+    /* IE6-9 */
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px
+        rgba(82, 168, 236, 0.6);
+    -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px
+        rgba(82, 168, 236, 0.6);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px
+        rgba(82, 168, 236, 0.6);
+}

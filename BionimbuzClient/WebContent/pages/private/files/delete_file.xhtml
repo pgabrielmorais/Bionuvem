@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <ui:decorate template="/resources/templates/template.xhtml">
+
+        <!-- Center Content -->
+        <ui:define name="conteudo_centro">
+            <h:form id="delete_form">               
+                <p:panel id="panel_form" header="Deletar Arquivos">
+                    <p:panel>
+                        <p:outputLabel value="Listagem de arquivos para deleção"/>
+
+                        <f:facet name="footer">
+                            <p:outputLabel value="Observação: " style="font-weight: bold; color: red; font-size: 11px"/>
+                            <p:outputLabel value="Essa ação não pode ser desfeita!" style="font-size: 11px"/>
+                        </f:facet>
+                    </p:panel>
+                    <br />
+                    <p:panel id="panel_armazenamento" header="Armazenamento">
+                        <p:outputLabel value="Seu armazenamento está em:"/> <br />
+                        <p:progressBar value="#{fileUploadBean.storageUsage}" labelTemplate="{value}%" displayOnly="true"/>
+                    </p:panel>
+                    <br />
+                    <p:panel id="filea">
+                        <p:dataTable id="datatable1" value="#{sessionBean.loggedUser.files}" var="f" style="text-align: center">
+                            <f:facet name="header">Sua lista de arquivos</f:facet>
+                            <p:column headerText="Nome" width="300" >
+                                <h:outputText value="#{f.name}" />
+                            </p:column>
+
+                            <p:column headerText="Tamanho" width="200">
+                                <h:outputText value="#{f.size/1000} kb" />
+                            </p:column>
+
+                            <p:column headerText="Upload em" width="200">
+                                <h:outputText value="#{f.uploadTimestamp}" />
+                            </p:column>
+
+                            <p:column headerText="Excluir arquivo" width="100" style="text-align: center">
+                                <p:commandButton icon="ui-icon-circle-close" action="#{deleteFileBean.deleteFile(f)}" update="datatable1"/>
+                            </p:column>
+                        </p:dataTable>
+                    </p:panel>
+                </p:panel>
+
+            </h:form>
+        </ui:define>
+
+    </ui:decorate>
+</html>

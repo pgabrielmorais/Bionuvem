@@ -1,0 +1,81 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+
+    <ui:decorate template="/resources/templates/template.xhtml">
+
+        <!-- Center Content -->
+        <ui:define name="conteudo_centro">
+
+            <h:form id="form">
+                <p:growl id="msgs" autoUpdate="true"/>
+                    <p:fieldset legend="Configurações de Elasticidade">
+                        <h:outputText value="Ativar Elasticidade nesta Máquina Virtual?" />
+                        <p:selectBooleanCheckbox value="" />
+                        
+                        <h:panelGrid columns="4" cellpadding="5">
+                            <p:outputLabel for="metrica1" value="sempre que a" />
+                                <p:selectOneMenu id="metrica1">
+                                    
+                                    <f:selectItem itemLabel="Minimo"/>
+                                    <f:selectItem itemLabel="Soma"/>
+                                    <f:selectItem itemLabel="Média"/>
+                                </p:selectOneMenu>
+                            
+                            <p:outputLabel for="metrica2" value="da/do" />
+                                <p:selectOneMenu id="metrica2">
+                                    
+                                    <f:selectItem itemLabel="Leituras de Disco"/>
+                                    <f:selectItem itemLabel="Utilização de CPU"/>
+                                </p:selectOneMenu>
+                            
+                            <p:outputLabel for="metrica3" value="é" />
+                                <p:selectOneMenu id="metrica3">
+                                    
+                                    <f:selectItem itemLabel="&gt;"/>
+                                    <f:selectItem itemLabel="="/>
+                                    <f:selectItem itemLabel="&lt;"/>
+                                    <f:selectItem itemLabel="&lt; ="/>
+                                    <f:selectItem itemLabel="&gt; ="/>
+                                </p:selectOneMenu>
+                            
+                            <p:inputText/>
+                            <h:outputText value="%" />
+                            
+                            <h:outputText value="Por pelomenos" />
+                            <p:inputText/>
+                            
+                            <p:outputLabel for="metrica4" value=" periodos consecutivos de" />
+                                <p:selectOneMenu id="metrica4">
+                                    <f:selectItem itemLabel="1 minuto"/>
+                                    <f:selectItem itemLabel="10 minutos"/>
+                                    <f:selectItem itemLabel="1 hora"/>
+                                    <f:selectItem itemLabel="30 minutos"      />                              
+                                </p:selectOneMenu>
+                            
+                            <p:outputLabel for="metrica5" value="execute a ação de" />
+                                <p:selectOneMenu id="metrica5">
+                                    
+                                    <f:selectItem itemLabel="Elasticidade Horizontal"/>
+                                    <f:selectItem itemLabel="Elasticidade Vertical"/>
+                                </p:selectOneMenu>
+                            
+                            
+                            
+                            <p:commandButton value="Validate" id="ajax" update="msgs" actionListener="#{buttonView.buttonActionCredential}" styleClass="ui-priority-primary"  />
+                        </h:panelGrid>
+                            
+                    </p:fieldset>
+                
+                
+                
+            </h:form> 
+        </ui:define>
+
+    </ui:decorate>
+</html>

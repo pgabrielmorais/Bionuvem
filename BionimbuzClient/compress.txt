@@ -1,0 +1,176 @@
+/**
+ * Criar o pacote br.unb.cic.bionimbuz.compactor
+ *
+ * Incluir no pacote acima a interface:
+ */
+public interface Compactor {
+	/**
+	* Compact a File
+	*
+	* @param in
+	* @return compressed File
+	*/
+	public String compact(String inputFile);	
+}	
+
+/**
+ * Criar o pacote br.unb.cic.bionimbuz.compress.compactors
+ *
+ * Criar as classe:
+ */
+public class GZipCompactor implements Compactor {
+
+	@Override
+	public String compactor (String inputFile) {
+		File out = new File(in + ".gzip");
+		GZIPOutputStream gzip = new GZIPOutputStream( new FileOutputStream(out));
+		gzip.write(IOUtils.toByteArray(new FileReader(in)));
+		IOUtils.closeQuietly(gzip);
+
+		return out.getAbsolutePath();
+	}
+}
+
+public class Zip4JCompactor implements Compactor {
+	@Override
+	public String compact(String inputFile) {
+		File out = new File(in + ".zip4j");
+		
+		try {
+			ZipFile zipFile = new ZipFile(out.getAbsolutePath());
+			ZipParameters parametes = new ZipParameters();
+			parametes.setCompressionLevel(compressionLevel);
+			zipFile.addFile(new File(in), parametes);
+		} catch (ZipException e) {
+			throw new IOException(e);
+		}
+
+		return out.getAbsolutePath();
+	}
+}
+
+public class ApacheXZCompactor implements Compactor {
+	@Override
+	public String compact (String inputFile) {
+		File out = new File(in + ".xz");
+		
+		try {
+			ApacheGenericCompactor.compact(new File(in), out, CompressorStreamFactory.XZ);
+		} catch (CompressorException e) {
+			throw new IOException(e);
+		}
+
+		return out.getAbsolutePath();
+	}
+}
+
+/**
+ * Marcar o tempo antes dos testes com compactação
+ *
+ * Para os testes com compactação:	
+ *	1. Compactar o arquivo na classe (Action) Upload
+ *	2. Disparar o contador
+ *	3. Após resposta, parar o contador
+ *	4. Comparar os tipos de compressão
+ */
+
+
+/**
+ *####################################
+ *	  Alterações para o BioNimbuZ
+ *####################################
+ *
+ *-> Tentar fazer o merge da branch storage
+ *
+ *-> Se não der certo, criar a interface
+ */
+public interface Descompactor {
+	/**
+	* Descompress a File
+	*
+	* @param compressedFile
+	* @return descompressedFile
+	*/
+	public String descompact (String compressedFile);	
+}
+
+/**
+ * Classe GZip
+ */
+public class GZipDescompactor implements Descompactor {	
+
+	@Override
+	public String descompact(String compressedFile) {
+		File out = new File(compressed.replace(".gzip", ""));
+		FileOutputStream fos = new FileOutputStream(out);
+		byte[] buffer = new byte[2*1024*1024];
+		GZIPInputStream gzip = new GZIPInputStream( new FileInputStream(compressed));
+		int len;
+		
+		while ((len = gzip.read(buffer)) > 0) {
+			fos.write(buffer, 0, len);
+		}
+
+		fos.flush();
+		IOUtils.closeQuietly(gzip);
+		IOUtils.closeQuietly(fos);
+		
+		return out.getAbsolutePath();
+	}
+}
+
+public class Zip4JDescompactor implements Descompactor {
+	@Override
+	public String descompact(String compressedFile) throws IOException{
+		String name = getName(in).replace(".zip4j", "");
+		String folder = getParentFolder(in);
+		
+		try {
+			ZipFile zipFile = new ZipFile(in);
+			zipFile.extractFile(name, folder);
+
+		} catch (ZipException e) {
+			throw new IOException(e);
+		}
+
+		return folder + "/" + name;
+	}
+
+	private String getName(String path){
+		Pattern pat = Pattern.compile("(.*)\\/([a-zA-Z0-9 _\\.]+)");
+		Matcher mat = pat.matcher(path);
+		mat.matches();
+		return mat.group(2);
+	}
+
+	private String getParentFolder(String path){
+		Pattern pat = Pattern.compile("(.*)\\/([a-zA-Z0-9 _\\.]+)");
+		Matcher mat = pat.matcher(path);
+		mat.matches();
+		return mat.group(1);
+	}
+}
+
+
+
+public class ApacheXZDescompactor implements Descompactor {
+	@Override
+	public String descompact(String compressedFile) {
+		String out = compressed.replace(".xz", "");
+		FileInputStream fin = new FileInputStream(compressed);
+		BufferedInputStream in = new BufferedInputStream(fin);
+		FileOutputStream fos = new FileOutputStream(out);
+		XZCompressorInputStream xzIn = new XZCompressorInputStream(in);
+	
+		final byte[] buffer = new byte[2*1024*1024];
+		int n = 0;
+	
+		while (-1 != (n = xzIn.read(buffer))) {
+			fos.write(buffer, 0, n);
+		}
+		
+		fos.close();
+		xzIn.close();
+		return out;
+	}
+}

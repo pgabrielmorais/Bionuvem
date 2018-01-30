@@ -1,0 +1,28 @@
+{
+  "id" : "Workflow28-01-2016-233ae6c8-3b3c",
+  "jobs" : [ {
+    "id" : "b4cf9986",
+    "testId" : 0,
+    "localId" : null,
+    "serviceId" : "1",
+    "args" : "%I1 %O1 ",
+    "inputFiles" : [ {
+      "id" : "47d83ad4-d289-4525-b3c2-0b623a2179e4",
+      "name" : "1.png",
+      "size" : 53513,
+      "userId" : 1,
+      "uploadTimestamp" : "25/01/2016 07:48:47",
+      "hash" : "7f740201eee2c83ffa024e9fcbb91dac101b48044094ee40187f99dc2fbb0a77",
+      "payload" : null
+    } ],
+    "inputURL" : "",
+    "outputs" : [ "output_b4cf9986" ],
+    "timestamp" : 1454004742431,
+    "worstExecution" : null,
+    "dependencies" : [ ]
+  } ],
+  "creationDatestamp" : "28/01/2016 16:12:22",
+  "userId" : 1,
+  "description" : "33123123",
+  "status" : "PENDING"
+}

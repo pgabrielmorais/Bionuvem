@@ -1,0 +1,43 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+
+    <ui:decorate template="/resources/templates/template.xhtml">
+
+        <!-- Center Content -->
+        <ui:define name="conteudo_centro">
+
+            <h:form id="form">
+                <p:growl id="msgs" autoUpdate="true"/>
+                    <p:fieldset legend="Amazon">
+                        <h:panelGrid columns="2" cellpadding="5">
+                            <h:outputText value="secretKey" />
+                            <p:inputText style="width: 500px"/>
+                            
+                            <h:outputText value="accesKey" />
+                            <p:inputText style="width: 500px"/>
+                            
+                            <p:commandButton value="Validate" id="ajax" update="msgs" actionListener="#{buttonView.buttonActionCredential}" styleClass="ui-priority-primary"  />
+                        </h:panelGrid>
+                            
+                    </p:fieldset>
+                
+                    <p:fieldset legend="Google">
+                        <h:panelGrid columns="2" cellpadding="5">
+                            <h:outputText value="JSON" />
+                            <p:inputTextarea style="width: 500px"/>
+                            <p:commandButton value="Validate" id="ajax2" update="msgs" actionListener="#{buttonView.buttonActionCredential}" styleClass="ui-priority-primary" />
+                            </h:panelGrid>
+                    </p:fieldset>
+                
+                
+            </h:form> 
+        </ui:define>
+
+    </ui:decorate>
+</html>

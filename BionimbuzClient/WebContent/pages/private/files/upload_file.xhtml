@@ -1,0 +1,81 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <ui:decorate template="/resources/templates/template.xhtml">
+
+        <!-- Conteúdo do Centro -->
+        <ui:define name="conteudo_centro">
+            <h:form id="form">
+                <p:growl id="growl" autoUpdate="true" showDetail="true" showSummary="true"/>
+
+                <p:panel header="Upload de Arquivos para seu Armazenamento">
+                    <p:panel>
+                        Página utilizada para realizar upload de arquivos para o servidor.
+                    </p:panel>
+                    <br />
+                    <p:panel>
+                        <p:fileUpload id="file_upload" mode="advanced" 
+                                      dragDropSupport="false" multiple="false" 
+                                      invalidFileMessage="Formato de arquivo inválido"
+                                      fileUploadListener="#{fileUploadBean.handleUploadedFile}"
+                                      cancelLabel="Cancelar" uploadLabel="Enviar"
+                                      label="Escolher Arquivo" allowTypes="#{fileUploadBean.allowedTypes}"
+                                      update="growl,panel" sizeLimit="25000000000"/>
+                    </p:panel>
+                    <br />
+                    <p:panel id="panel">
+                        <p:dataTable value="#{sessionBean.loggedUser.files}" var="f" style="text-align: center"
+                                     rows="15" emptyMessage="Nenhum arquivo encontrado">
+                            <f:facet name="header">Sua lista de arquivos</f:facet>
+                            <p:column headerText="Nome" width="300">
+                                <h:outputText value="#{f.name}" />
+                            </p:column>
+
+                            <p:column headerText="Tamanho" width="200">
+                                <h:outputText value="#{f.size/1000} kb" />
+                            </p:column>
+
+                            <p:column headerText="Upload em" width="200">
+                                <h:outputText value="#{f.uploadTimestamp}" />
+                            </p:column>
+                        </p:dataTable>
+                    </p:panel>
+                </p:panel>
+            </h:form>
+        </ui:define>
+
+    </ui:decorate>
+    <!--
+        no fileUpload -> onstart="readText(this.files[0])" 
+        <script>
+            function readText(f) {
+    //            var file = document.getElementById("form:file_upload_input").files[0];
+    //
+    //            var reader = new FileReader();
+    //            
+    //            reader.onload = function (e) {
+    //                var t1 = reader.result;
+    //            };
+    //            
+    //            reader.readAsText(file, "UTF-8");
+                var reader = new FileReader();
+                var t1;
+    
+                reader.onload = function (e) {
+                    t1 = e.target.result;
+                };
+    
+                reader.readAsText(f);
+                alert("Aguardando...");            
+                alert("Conteúdo: " + reader.result);
+                alert("Tamanho: " + reader.length);
+                var hash = CryptoJS.SHA3(reader.result, {outputLength:256});
+                alert(hash);
+            }
+        </script>
+    -->
+</html>

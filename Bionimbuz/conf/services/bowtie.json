@@ -1,0 +1,6 @@
+{
+    "id": 1,
+    "name": "Bowtie",
+    "info": "Bowtie is an ultrafast, memory-efficient short read aligner.",
+    "path": "./data/programs/bowtie.sh"
+}

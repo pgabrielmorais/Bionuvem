@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<faces-config xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_2.xsd"
+              version="2.2">
+
+    <navigation-rule>
+        <from-view-id>/pages/public/login.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>success</from-outcome>
+            <to-view-id>/pages/private/home.xhtml</to-view-id>
+            <redirect />
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>sign_up</from-outcome>
+            <to-view-id>/pages/public/sign_up.xhtml</to-view-id>
+            <redirect />
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>sign_up_success</from-outcome>
+            <to-view-id>/pages/public/sign_in_success.xhtml</to-view-id>
+            <redirect />
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>sign_up_error</from-outcome>
+            <to-view-id>/pages/public/sign_up_error.xhtml</to-view-id>
+            <redirect />
+        </navigation-case>
+    </navigation-rule>
+
+    <navigation-rule>
+        <from-view-id>/pages/error/*</from-view-id>
+        <navigation-case>
+            <from-outcome>login</from-outcome>
+            <to-view-id>/pages/public/login.xhtml</to-view-id>
+            <redirect />
+        </navigation-case>
+    </navigation-rule>
+
+    <navigation-rule>
+        <from-view-id>/*</from-view-id>
+        <navigation-case>
+            <from-outcome>logout</from-outcome>
+            <to-view-id>/pages/public/login.xhtml</to-view-id>
+            <redirect />
+        </navigation-case>
+    </navigation-rule>
+
+    <navigation-rule>
+        <from-view-id>/pages/*</from-view-id>
+        <navigation-case>
+            <from-outcome>error</from-outcome>
+            <to-view-id>/pages/error/error_page.xhtml</to-view-id>
+            <redirect />
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>server_offline</from-outcome>
+            <to-view-id>/pages/error/server_offline.xhtml</to-view-id>
+            <redirect />
+        </navigation-case>
+
+        <!-- Home -->
+        <navigation-case>
+            <from-outcome>home</from-outcome>
+            <to-view-id>/pages/private/home.xhtml</to-view-id>
+            <redirect />
+        </navigation-case>
+		
+        <!-- Workflow -->
+        <navigation-case>
+            <from-outcome>workflow_composer</from-outcome>
+            <to-view-id>/pages/private/workflows/workflow_composer.xhtml</to-view-id>
+            <redirect />
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>cancel_workflow</from-outcome>
+            <to-view-id>/pages/private/workflows/cancel.xhtml</to-view-id>
+            <redirect />
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>workflow_status</from-outcome>
+            <to-view-id>/pages/private/workflows/status.xhtml</to-view-id>
+            <redirect />
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>workflow_history</from-outcome>
+            <to-view-id>/pages/private/workflows/history.xhtml</to-view-id>
+            <redirect />
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>start_success</from-outcome>
+            <to-view-id>/pages/private/workflows/start_success.xhtml</to-view-id>
+            <redirect />
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>start_error</from-outcome>
+            <to-view-id>/pages/private/workflows/start_error.xhtml</to-view-id>
+            <redirect />
+        </navigation-case>
+		
+        <!-- adm -->
+        <navigation-case>
+            <from-outcome>statistics</from-outcome>
+            <to-view-id>/pages/private/adm/statistics.xhtml</to-view-id>
+            <redirect />
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>configurations</from-outcome>
+            <to-view-id>/pages/private/adm/configurations.xhtml</to-view-id>
+            <redirect />
+        </navigation-case>
+        
+        <navigation-case>
+            <from-outcome>keys</from-outcome>
+            <to-view-id>/pages/private/adm/keys.xhtml</to-view-id>
+            <redirect />
+        </navigation-case>
+		
+        <!-- Files -->
+        <navigation-case>
+            <from-outcome>storage</from-outcome>
+            <to-view-id>/pages/private/files/storage.xhtml</to-view-id>
+            <redirect />
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>upload_file</from-outcome>
+            <to-view-id>/pages/private/files/upload_file.xhtml</to-view-id>
+            <redirect />
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>download_file</from-outcome>
+            <to-view-id>/pages/private/files/download_file.xhtml</to-view-id>
+            <redirect />
+        </navigation-case>
+	<navigation-case>
+            <from-outcome>delete_file</from-outcome>
+            <to-view-id>/pages/private/files/delete_file.xhtml</to-view-id>
+            <redirect />
+        </navigation-case>
+                	
+        <!-- Edit Profile -->
+        <navigation-case>
+            <from-outcome>edit_profile</from-outcome>
+            <to-view-id>/pages/private/profile/edit_profile.xhtml</to-view-id>
+            <redirect />
+        </navigation-case>
+    </navigation-rule>
+</faces-config>

@@ -1,0 +1,218 @@
+/*
+	BioNimbuZ is a federated cloud platform.
+    Copyright (C) 2012-2015 Laboratory of Bioinformatics and Data (LaBiD), 
+	Department of Computer Science, University of Brasilia, Brazil
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+@namespace("br.unb.cic.bionimbuz.avro.gen")
+protocol BioProto {
+
+    enum NodeState { STARTING, ACTIVE, CLOSING, IDLE, ERROR, DECOMMISSIONED }
+
+    enum WorkflowStatus { PENDING, EXECUTING, FINALIZED_WITH_SUCCESS, FINALIZED_WITH_WARNINGS, FINALIZED_WITH_ERRORS, PAUSED, STOPPED_WITH_ERROR }
+
+    record JobCancel {
+       string jobID;
+       array<string> files;
+    }
+
+    record FileInfo{
+        string id;
+        string name;
+        long size;
+        long userId;
+        string uploadTimestamp;
+        string hash;
+    }
+
+    record Instance{
+        string id;
+        string type;
+        double costPerHour;
+        string locality;
+        double memoryTotal;
+        double cpuHtz;
+        string cpuType;
+        int numCores;
+        string description;
+        string provider;
+        array<string> idProgramas;
+        long creationTimer;
+        int delay;
+        long timetocreate;
+        long idUser;
+        string ip;
+    }
+    
+    record Prediction{
+        string id;
+        string idService;
+        long timeService;
+        Instance instance;
+        double custoService;
+    }
+
+    record User{
+        long id;
+        string login;
+        string nome;
+        string cpf;
+        string email;
+        string celphone;
+        array<Instance> instances;
+    }
+
+    record Pair{
+        string first;
+        long second;
+    }  
+
+    record Sla{
+        string id;
+        string idWorkflow;
+        string provider;
+        int objective;
+        long period;
+        double value;
+        int limitationType;
+        long limitationValueExecutionTime;
+        double limitationValueExecutionCost;
+        double execeedValueExecutionCost;
+        boolean prediction;
+        array <Prediction> solutions;
+        boolean limitationExecution;
+    }
+
+    record Job {
+        string id;
+        string localId;
+        string serviceId;
+        string args ;
+        array<FileInfo> inputFiles;
+        array<string> outputs;
+        long timestamp;
+        array<string> dependencies;
+        string referenceFile;
+        array<string> ipjob;
+    }
+
+    record Workflow {
+        string id;
+        array<Job> jobs;
+        array<Instance> intancesWorkflow;
+        Sla sla;
+        User userWorkflow;
+        string creationDatestamp;
+        long userId;
+        string description;
+        union {WorkflowStatus, null} status;
+    }
+
+    record PluginFile {
+        string id;
+        string path;
+        string name;
+        string hash;    
+        long size;
+        array<string> pluginId;
+    }
+
+
+    /** Sends a bid request to a bidder and receives the response */
+    //BidResponse bid(BidRequest bidRequest) throws BidderError;
+
+    /** Sends a notification */
+    //void notify(EndMessage notification) oneway;
+
+    //void cancelTask(string taskId) oneway;
+
+    /* PingRespMessage ping(PingReqMessage request); */
+
+    //CancelRespMessage cancelTask(string taskId);
+
+    //CloudRespMessage cloudRequest();
+
+    /** Pings a node, e.g. to measure latency */
+    boolean ping();
+
+    array<string> listFilesName();
+
+    /** Procurar em qual Ip está o arquivo file */    
+    string getIpFile(string file);
+
+    array<string> listServices();
+
+    array<PluginFile> listFiles();
+
+    array<PluginFile> listFilesPlugin(string pluginId);
+
+    string getFileHash(string fileName);
+
+    string startJobName(string jobID, string ip);
+
+    string startWorkflow(Workflow workflow);
+
+    string schedPolicy(int numPolicy);
+
+    string statusJob(string pipelineId, string jobId);
+
+    string statusAllJob();
+
+    record NodeInfo {
+        string peerId;
+        string address;
+        float freesize;
+        double latency; 
+        double bandwidth;
+    }
+
+    string cancelJob(string jobID);
+
+    // Set information file that will be uploaded
+    void setFileInfo(FileInfo file, string kindService) oneway;
+
+    // Get peers from server
+    array<NodeInfo> getPeersNode();
+
+    // Envia plugins
+    // void sendPlugins(array<NodeInfo> plugins) oneway;
+
+    // Mensagem de arquivo enviado com sucesso do cliente pro servidor
+    string fileSent(FileInfo fileSucess,array<string> dest);
+
+    // Chama Storage Service
+    array<NodeInfo> callStorage(array<NodeInfo> list);
+
+    // Invoca metodo de replicação
+    void notifyReply(string filename,string address) oneway;
+
+    // Decriptografa os arquivos do plugin
+    void decryptPluginFile(string filename) oneway;
+
+    // Verifica se exist o arquivo e cria no znode setando o watcher
+     boolean verifyFile(FileInfo fileSucess,array<string> dest);
+
+    // Seta os watchers na status para a storage , pode ser setado pros outros servicos tambem
+    void setWatcher(string idPlugin) oneway; 
+
+    // Verifica o tamanho do arquivo
+    long checkFileSize (string file);
+
+    // Realiza o upload de um arquivo chamando o storage
+    boolean uploadFile(string path, FileInfo file);
+
+    // Retorna o id do peer que contém um dado arquivo
+    PluginFile getFileFromPeers(string filename);
+}

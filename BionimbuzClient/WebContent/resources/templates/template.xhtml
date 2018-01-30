@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <h:head>
+        <h:outputStylesheet library="css" name="default.css" />
+        <link rel="shortcut icon" type="image/x-icon" href="#{request.contextPath}/resources/favicon/favicon.ico" />
+        <!--<h:outputScript library="primefaces" name="jquery/jquery.js"/>-->
+        <!--<script src="http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/sha3.js"></script>-->
+    </h:head>
+
+    <h:body>
+        <p:layout fullPage="true">
+            <!-- Superior Menu -->
+            <p:layoutUnit position="north" size="65">
+                <h:form>
+                    <p:menubar style="margin: 5px">
+                        <f:facet name="options">
+                            <p:commandButton action="home" icon="ui-icon-home" title="Página Inicial" style="margin: 2px"/>
+                            <p:commandButton id="edit_profile" icon="ui-icon-person" style="margin: 2px" />
+                            <p:overlayPanel id="overlay" for="edit_profile" showEvent="mouseover" 
+                                            appendToBody="true" at="bottom" 
+                                            dismissable="true" hideEffect="fade" 
+                                            showEffect="fade" >
+                                <center>
+                                    <h:graphicImage value="/resources/img/profile_img.png" width="130px"/> <br />
+                                    <p:outputLabel value="#{sessionBean.loggedUser.nome}" style="font-weight: bold; font-size: 115%"/>
+
+                                    <hr style="color: #2980b9"/>
+
+                                    <p:outputLabel value="#{sessionBean.loggedUser.login}" style="font-style: italic; font-weight: bold; margin: 3px"/> <br />
+                                    <p:outputLabel value="#{sessionBean.loggedUser.email}" style="font-style: italic; margin: 3px"/> <br />
+                                    <p:commandButton value="Editar perfil" icon="ui-icon-gear" action="edit_profile" style="margin: 3px"/>
+                                </center>
+                            </p:overlayPanel>
+                            <p:commandButton action="#{sessionBean.logout()}" icon="ui-icon-power" style="margin: 2px"/>
+                        </f:facet>
+                    </p:menubar>
+                </h:form>
+            </p:layoutUnit>
+
+            <!-- West Menu Panel -->
+            <p:layoutUnit position="west" size="250">
+                <h:form>
+                    <p:panelMenu>
+                        <!-- Workflow submenu -->
+                        <p:submenu label="Workflows">
+                            <p:menuitem value="Criar novo Workflow" action="workflow_composer"/>
+                            <p:menuitem value="Status de seus Workflows" action="workflow_status" />
+                        </p:submenu>
+
+                        <!-- Storage submenu -->
+                        <p:submenu label="Armazenamento">
+                            <p:menuitem value="Meu Armazenamento" action="storage"/>
+                            <p:menuitem value="Enviar Arquivo" action="upload_file"/>
+                            <p:menuitem value="Deletar Arquivo" action="delete_file"/>
+                            <p:menuitem value="Realizar Download" action="download_file" />
+                        </p:submenu>
+                                                
+                        <p:submenu label="Configurações e Estatísticas">
+                            <p:menuitem value="Instancias da Federação" action="statistics"/>
+                            <p:menuitem value="Configurações de Elasticidade" action="configurations"/>
+                            <p:menuitem value="Configurações de Chaves de Acesso" action="keys"/>
+                        </p:submenu>
+                        
+                    </p:panelMenu>
+                </h:form>
+            </p:layoutUnit>
+
+            <p:layoutUnit position="center">
+                <ui:insert name="conteudo_centro">
+
+                </ui:insert>
+            </p:layoutUnit>
+        </p:layout>
+    </h:body>
+</html>

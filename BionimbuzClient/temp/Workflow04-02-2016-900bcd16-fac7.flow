@@ -1,0 +1,29 @@
+{
+  "id" : "Workflow04-02-2016-900bcd16-fac7",
+  "jobs" : [ {
+    "id" : "49a8dc54",
+    "testId" : 0,
+    "localId" : null,
+    "serviceId" : "1111",
+    "args" : "%I1 %O1 -k 10 ",
+    "inputFiles" : [ {
+      "id" : "3daf0ec1-8b75-4034-bc8d-044a456bbbae",
+      "name" : "gitlog.txt",
+      "size" : 0,
+      "userId" : 2,
+      "uploadTimestamp" : "03/02/2016 23:38:58",
+      "hash" : "a7ffc6f8bf1ed76651c14756a061d662f580ff4de43b49fa82d80a4b80f8434a",
+      "payload" : null
+    } ],
+    "inputURL" : "",
+    "outputs" : [ "output_49a8dc54" ],
+    "timestamp" : 1454581246231,
+    "worstExecution" : null,
+    "dependencies" : [ ],
+    "referenceFile" : "hs_ref_GRCh37.p10_chr3.fa"
+  } ],
+  "creationDatestamp" : "04/02/2016 08:20:46",
+  "userId" : 2,
+  "description" : "Teste de import",
+  "status" : "PENDING"
+}

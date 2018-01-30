@@ -1,0 +1,606 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <ui:decorate template="/resources/templates/template.xhtml">	
+        <!-- Center Content -->
+        <ui:define name="conteudo_centro">
+            <h:form id="form">
+                <p:growl id="growl" autoUpdate="true" showDetail="true"
+                         showSummary="true" />      
+                <p:wizard widgetVar="wizard" nextLabel="Avançar" backLabel="Voltar" flowListener="#{workflowComposerBean.flowController}">
+                    <p:tab id="initial" title="Início">
+                        <p:panel>
+                            <p:panel style="margin: 10px">
+                                <f:facet name="header">
+                                    <div style="text-align: center;">
+                                        <p:outputLabel value="Iniciar novo Workflow" />
+                                    </div>
+                                </f:facet>
+                                <div style="text-align: center;">
+                                    <p:panel style="margin: 10px">
+                                        Clique aqui para começar um novo Workflow, sem importá-lo.
+                                    </p:panel>
+                                    <p:commandButton value="Começar Projeto" onclick="PF('wizard').next();"/>  
+                                </div>
+                            </p:panel>
+                            <br />
+                            <p:panel style="margin: 10px">
+                                <f:facet name="header">
+                                    <div style="text-align: center;">
+                                        <p:outputLabel value="Importar Workflow" />
+                                    </div>
+                                </f:facet>
+                                <div style="text-align: center;">
+                                    <p:panel style="margin: 10px">
+                                        Caso queira importar um Workflow, faça seu upload por aqui.
+                                    </p:panel>
+                                    <p:fileUpload id="file_upload" mode="advanced" 
+                                                  dragDropSupport="false" multiple="false" 
+                                                  invalidFileMessage="Formato de arquivo inválido. Apenas formato .flow é permitido"
+                                                  fileUploadListener="#{workflowComposerBean.handleImportedWorkflow}"
+                                                  cancelLabel="Cancelar" uploadLabel="Enviar"
+                                                  label="Escolher Workflow" allowTypes="/(\.|\/)(flow)$/"
+                                                  update="growl" sizeLimit="268435"/>
+                                </div>
+                            </p:panel>
+                        </p:panel>
+                    </p:tab>
+                    <!-- Element selection tab -->
+                    <p:tab id="element_selection" title="Seleção de Elementos">
+                        <p:panel header="Escolha os elementos deste Workflow">
+                            <p:panel style="border-color: #2980b9">
+                                <p:outputLabel value="De uma breve descrição deste workflow" /> <br />
+                                <p:inputText value="#{workflowComposerBean.workflowDescription}" style="width: 99%"
+                                             required="true" requiredMessage="Campo 'Descrição' obrigatorio" />
+                            </p:panel> 
+                            <br />
+                            <p:fieldset legend="Elementos disponíveis" style="border-color: #2980b9">
+                                <p:panel style="border-color: #2980b9">
+                                    <p:outputLabel value="Escolha os elementos que irão compor este workflow." />
+                                </p:panel> 
+                                <br />
+                                <div style="text-align: center;">
+                                    <p:dataGrid var="s" value="#{workflowComposerBean.servicesList}" columns="4" layout="grid"
+                                                id="elements" paginator="true" rows="4"
+                                                paginatorTemplate = "{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink}" >
+                                        <f:facet name="header" >
+                                            Elementos
+                                        </f:facet>
+
+                                        <p:panel header="#{s.name}" style="text-align:center">
+                                            <h:panelGrid columns="1" style="width:100%">
+                                                <h:outputText value="#{s.info}" />
+                                                <hr style="color: #2980b9"/>
+                                                <f:facet name="footer">
+                                                    <p:commandButton action="#{workflowComposerBean.addElement(s)}"
+                                                                     value="Adicionar" icon="ui-icon-check" 
+                                                                     update=":form:chosen_elements, :form:growl"
+                                                                     iconPos="left" />
+                                                </f:facet>
+                                            </h:panelGrid>
+                                        </p:panel>
+
+                                    </p:dataGrid>
+                                </div>
+                            </p:fieldset>
+                            <br />
+                            <p:fieldset id="chosen_elements" legend="Elementos escolhidos" style="border-color: #2980b9">
+                                <center>
+                                    <p:dataTable value="#{workflowComposerBean.elements}" var="e" style="width: 400px"
+                                                 emptyMessage="Nenhum elemento adicionado" paginator="true" rows="8">
+                                        <p:column headerText="Elemento">
+                                            <p:outputLabel value="#{e.name}"/>
+                                        </p:column>
+
+                                        <p:column headerText="Excluir" style="text-align: center">
+                                            <p:commandButton icon="ui-icon-circle-close" action="#{workflowComposerBean.removeElement(e)}" update=":form:chosen_elements"/>
+                                        </p:column>
+                                    </p:dataTable>
+                                </center>
+                            </p:fieldset>
+                        </p:panel>
+                    </p:tab>
+                    <p:tab id="workflow_design" title="Desenho do Workflow">
+                        <p:panel id="workflow_pnl">   
+                            <!-- ======== Diagram ======== -->
+                            <p:panel>
+                                <f:facet name="header">
+                                    <div style="text-align: center;">
+                                        <p:outputLabel value="Diagrama" />
+                                    </div>
+                                </f:facet>
+                                <p:diagram id="workflow_diagram"
+                                           value="#{workflowComposerBean.workflowModel}"
+                                           style="height:500px" >
+                                    <p:ajax event="connect" listener="#{workflowComposerBean.onConnect}" />
+                                    <p:ajax event="disconnect" listener="#{workflowComposerBean.onDisconnect}" />
+                                    <p:ajax event="connectionChange" listener="#{workflowComposerBean.onConnectionChange}" />
+                                </p:diagram>
+                            </p:panel>
+                        </p:panel>
+                    </p:tab>
+                    <!-- Previsao (michel)-->
+                    <p:tab id="previsao" title="Previsão">
+                        <p:panel id="detalhes" style="border-color: #2980b9" widgetVar="testPanel" visible="true" >
+                            <p:fieldset id="prediction" legend="Serviço de Predição" style="border-color: #2980b9">
+                                <h:form>
+                                    <p:outputLabel for="preco" value="Custo Máximo que deseja pagar: " />
+                                    <p:inputNumber id="preco" value="#{workflowComposerBean.preco}" symbol="R$ "/>
+
+                                    <h:panelGrid columns="1" style="margin-bottom: 10px">
+                                        <h:outputText id="output" value="Custo/Beneficio #{workflowComposerBean.number2}" />
+                                        <h:inputHidden id="txt2" value="#{workflowComposerBean.number2}" />
+                                        <p:slider for="txt2" display="output" style="width: 200px" displayTemplate="Custo Benefício em %{value}" />
+                                    </h:panelGrid>
+
+                                    <p:commandButton value="Start" id="start" type="button" onclick="start()" widgetVar="startButton1"/>
+                                    <p:commandButton value="Cancel" id="cancel" type="button" onclick="cancel()" />
+                                    <p:progressBar id="progressBarClient" widgetVar="pbClient" style="width:300px"/>
+
+                                    <p:growl id="growl1" />
+                                </h:form>           
+                            </p:fieldset> 
+                            <p:fieldset id="prediction1" legend="Previsão" style="border-color: #2980b9">
+<!--                                <h:form>-->
+                                    <p:dataTable var="instances" value="#{workflowComposerBean.selectedInstancies}">
+                                        <p:column headerText="id">
+                                            <h:outputText value="#{instances.id}" />
+                                        </p:column>
+                                        <p:column headerText="Programas">
+<!--                                            <p:dataTable var="programs" value="{instances.programas}">
+                                                <h:outputText value="{programs.name}" />
+                                            </p:dataTable>-->
+                                        </p:column>
+                                        <p:column headerText="Memória (Gb)">
+                                            <h:outputText value="#{instances.memoryTotal}" />
+                                        </p:column>
+                                        <p:column headerText="CPU (Núcleos)">
+                                            <h:outputText value="#{instances.numCores}" />
+                                        </p:column>
+                                        <p:column headerText="Preço R$">
+                                            <h:outputText value="#{instances.costPerHour}" />
+                                        </p:column>
+                                        <p:column headerText="Provedor">
+                                            <h:outputText value="#{instances.provider}" />
+                                        </p:column>
+                                    </p:dataTable>
+                                <!--</h:form>-->           
+                                    <h:outputText value="Deseja utilizar as instâncias indicadas pela predição? " />
+                                    <p:selectBooleanButton id="value2" value="#{workflowComposerBean.agreePrediction}" onLabel="Sim" offLabel="Não" style="width:60px" />
+                            </p:fieldset> 
+                        </p:panel> 
+                    </p:tab>
+                    <!-- Elasticidade (FaY)-->
+                    <p:tab id="provisionamento" title="Provisionamento">
+                        <p:panel id="elasticity1" style="border-color: #2980b9">
+                            <p:fieldset id="instancesAvaible" legend="Instâncias Disponíveis" style="border-color: #2980b9">
+<!--                                <p:panelGrid  id="instancesB">
+                                    <f:facet name="header">
+                                        <p:row>
+                                            <p:column >Instância</p:column>
+                                            <p:column>Quantidade</p:column>
+                                            <p:column>Adicionar</p:column>
+                                        </p:row>
+                                    </f:facet>
+                                    <p:row >
+                                        <p:column>
+                                            <p:selectOneMenu id="instance" value="#{workflowComposerBean.chosenInstanceId}"  >
+                                                <f:selectItems value="#{workflowComposerBean.instancies}" itemDescription="Selecione" var="man" itemLabel="#{man.description}" itemValue="#{man.id}" />
+                                            </p:selectOneMenu>
+                                        </p:column>
+                                        <p:column >
+                                            <p:inputNumber id="number" value="#{workflowComposerBean.quantity}" minValue="0" maxValue="100" maxlength="3" required="true" requiredMessage="Campo quantidade obrigatório"/>
+                                        </p:column>    
+                                        <p:column>
+                                            <p:commandButton  actionListener="#{workflowComposerBean.adSelectedInstance}"
+                                                              icon="ui-icon-check" 
+                                                              update="instancesList, instancesB, :form:growl"/>
+                                        </p:column>
+                                    </p:row>
+                                </p:panelGrid>-->
+
+                                <p:dataTable id="instancesB" var="maq" value="#{workflowComposerBean.instancies}" widgetVar="maqtable"
+                                             scrollable="true" scrollHeight="200" selectionMode="single" rowKey="#{maq.id}"
+                                             emptyMessage="No Virtual Machines found with given criteria">
+                                    <p:column filterBy="#{maq.provider}" headerText="Provider" filterMatchMode="exact">
+                                        <f:facet name="filter">
+                                            <p:selectOneMenu onchange="PF('maqtable').filter()" >
+                                                <f:selectItem itemLabel="Select One" itemValue="#{null}" noSelectionOption="true" />
+                                                <f:selectItem itemLabel="Amazon" itemValue="Amazon"/>
+                                                <f:selectItem itemLabel="Google" itemValue="Google" />
+                                            </p:selectOneMenu>
+                                        </f:facet>
+                                        <h:outputText value="#{maq.provider}" /> 
+                                    </p:column>              
+                                    
+                                    <p:column filterBy="#{maq.type}" headerText="Type" filterMatchMode="contains">
+                                        <h:outputText value="#{maq.type}" />
+                                    </p:column>
+                                    
+                                    <p:column filterBy="#{maq.numCores}" headerText="CPU " filterMatchMode="contains">
+                                        <h:outputText value="#{maq.numCores} x #{maq.cpuHtz} GHZ" />
+                                    </p:column>
+                                    
+                                    <p:column filterBy="#{maq.memoryTotal}" headerText="Memoria" filterMatchMode="contains">
+                                        <h:outputText value="#{maq.memoryTotal} GB" />
+                                    </p:column>
+                                    <p:column filterBy="#{maq.costPerHour}" headerText="Preço" filterMatchMode="contains">
+                                        <h:outputText value="$ #{maq.costPerHour}" />
+                                    </p:column>
+                                    
+                                    <p:column filterBy="#{maq.locality}" headerText="Localização" filterMatchMode="exact">
+                                        <f:facet name="filter">
+                                            
+                                            <p:selectCheckboxMenu label="Localização" onchange="PF('maqtable').filter()" panelStyle="width:125px" scrollHeight="150">
+                                                <f:selectItems value="us" />
+                                                <f:selectItems value="asia-northeast" />
+                                                <f:selectItems value="asia-east" />
+                                                <f:selectItems value="asia" />
+                                                <f:selectItems value="europe" />
+                                                <f:selectItems value="Asia Pacific (Mumbai)" />
+                                                <f:selectItems value="Asia Pacific (Seoul)" />
+                                                <f:selectItems value="Asia Pacific (Tokyo)" />
+                                                <f:selectItems value="Asia Pacific (Singapore)" />
+                                                <f:selectItems value="Asia Pacific (Sydney)" />
+                                                <f:selectItems value="South America (Sao Paulo)" />
+                                                <f:selectItems value="AWS GovCloud (US)" />
+                                                <f:selectItems value="US West (Oregon)" />
+                                                <f:selectItems value="US West (N. California)" />
+                                                <f:selectItems value="US East (N. Virginia)" />
+                                                <f:selectItems value="EU (Frankfurt)" />
+                                                <f:selectItems value="EU (Ireland)" />
+                                            </p:selectCheckboxMenu>
+                                            
+<!--                                            <p:selectOneMenu onchange="PF('maqtable').filter()" >
+                                                <f:selectItem itemLabel="All"  />
+                                                <f:selectItem itemLabel="São Paulo" itemValue="South America (Sao Paulo)" />
+                                            </p:selectOneMenu>-->
+                                        </f:facet>
+                                        <h:outputText value="#{maq.locality}" />
+                                    </p:column>
+                                    
+                                    <p:column headerText="Adicionar" style="width:50px">
+                                        <!--<p:inputNumber id="number" value="#{workflowComposerBean.quantity}" />-->
+<!--                                        <p:commandButton  actionListener="#{workflowComposerBean.chosenInstanceId}"
+                                                              icon="ui-icon-check" 
+                                                              />-->
+                                        <p:commandButton  actionListener="#{workflowComposerBean.adSelectedInstance(maq)}"
+                                                              icon="ui-icon-check"  
+                                                              update="form:instancesList, :form:growl"/>
+                                    </p:column>
+
+                                </p:dataTable>
+                            </p:fieldset>    
+                            <p:fieldset id="instancesSelected" legend="Instâncias Selecionadas" style="border-color: #2980b9">
+                                <p:dataTable value="#{workflowComposerBean.selectedInstancies}" var="instance"  
+                                             paginator="true" rows="5" emptyMessage="Nenhuma instância adicionada" 
+                                             id="instancesList">
+                                    <f:facet name="header"> <div style="text-align: center;">Tipos de instâncias:</div></f:facet>
+                                    <p:column headerText="Descrição"  style="text-align: center">
+                                        <p:outputLabel value="#{instance.description}"/>
+                                    </p:column>
+                                    <p:column headerText="Tipo" style="text-align: center">
+                                        <p:outputLabel value="#{instance.type}"/>
+                                    </p:column>
+<!--                                    <p:column headerText="Quantidade"  style="text-align: center">
+                                        <h:outputLabel value="#{instance.quantity}"/>
+                                    </p:column>-->
+
+                                    <p:column>
+                                        <p:button value="Configurar Elasticidade"/>
+                                        <p:commandButton actionListener="#{workflowComposerBean.removeElement(instance)}" icon="ui-icon-trash"  update="instancesList, :form:growl"/>
+                                    </p:column>
+                                </p:dataTable>
+                            </p:fieldset>    
+                        </p:panel>        
+                    </p:tab>
+                    <!-- Sla Part-->
+                    <p:tab id="sla_option" title="SLA">
+                        <p:panel id="detalhes2" style="border-color: #2980b9">
+                            <p:fieldset id="limitation" legend="Termos do SLA" style="border-color: #2980b9">
+                                <p:panelGrid>
+                                    <p:row>                                       
+                                        <p:column><p:outputLabel value="Usuário" style="font-weight: bold"/></p:column>                                            
+                                        <p:column><p:outputLabel value="#{sessionBean.loggedUser.nome}" style="font-weight: bold"/></p:column>                                            
+                                    </p:row>
+                                    <p:row>   
+                                        <p:column><p:outputLabel value="Provedor" style="font-weight: bold"/></p:column>    
+                                        <p:column><p:outputLabel value="#{workflowComposerBean.provider}" style="font-weight: bold"/></p:column>    
+                                    </p:row>
+                                    <p:row>
+                                        <p:column colspan="2">
+                                           <p:fieldset id="contract" legend="Contrato de Nível de Serviço BioNimbuZ" style="border-color: #2980b9"> 
+                                            <h:outputText escape="false"
+                                                value="&lt;p&gt;O presente Contrato de Nível de Serviços da Plataforma BioNimbuZ, 
+                                            que é constituída pela Plataforma Amazon EC2, Plataforma Google Compute 
+                                            Engine GCE e Plataforma de Nuvem Privada da UnB, consiste em uma 
+                                            política que rege o uso da Elastic Compute Cloud (EC2) (Amazon EC2), da 
+                                            Amazon Elastic Block Store (Amazon EBS), da Google Compute Engine (GCE), 
+                                            da Google Cloud Store (GCS) e da Plataforma de nuvem a UnB de acordo com 
+                                            os termos do Contrato do Cliente AWS da Amazon, da Google Cloud Platform 
+                                            e da Plataforma de nuvem da UnB celebrado entre a Amazon Web Services, 
+                                            Inc., a Google Cloud Platform e a Plataforma de nuvem da UnB e os 
+                                            usuários dos serviços da AWS, da Google Cloud Platform e da Plataforma 
+                                            de nuvem da UnB.&lt;/p&gt;
+                                            &lt;p&gt;O presente SLA aplica-se separadamente a cada conta que utilizar o 
+                                            BioNimbuZ, no qual utilizam os serviço da Amazon EC2 ou da Amazon EBS ou 
+                                            da Google Compute Engine (GCE) ou da Google Cloud Store (GCS) ou da 
+                                            Plataforma de nuvem a UnB. Salvo disposição em contrário neste 
+                                            instrumento, o presente SLA está sujeito aos termos do Contrato da AWS, 
+                                            da Google Cloud Platform e da Plataforma de Nuvem da UnB e as expressões 
+                                            grafadas com letras iniciais maiúsculas assumem os significados a elas 
+                                            atribuídos no Contrato do Cliente BioNimbuZ. Reservamo-nos o direito de 
+                                            mudar os termos do presente SLA de acordo com o Contrato do Cliente 
+                                            BioNimbuZ.&lt;/p&gt;"/> 
+                                           </p:fieldset>
+                                        </p:column>
+                                    </p:row>
+                                    <p:row>
+                                        <p:column><p:outputLabel value="Porcentagem de Funcionamento Mensal" style="font-weight: bold"/></p:column>                                            
+                                        <p:column><p:outputLabel value="Porcentagem de Crédito de Serviço" style="font-weight: bold"/></p:column>                                            
+                                    </p:row>
+                                    <p:row>
+                                        <p:column><p:outputLabel value="Inferior a 99,95%, mas igual ou superior a 99,0%"/></p:column>    
+                                        <p:column><p:outputLabel value="10%"/></p:column>    
+                                    </p:row>
+                                    <p:row>
+                                        <p:column><p:outputLabel value="Inferior a 99,0%"/></p:column>    
+                                        <p:column><p:outputLabel value="30%"/></p:column>    
+                                    </p:row>
+                                    <p:row>
+                                        <p:column colspan="2">
+                                            <p:dataTable value="#{workflowComposerBean.selectedInstancies}" var="instance"  
+                                                         emptyMessage="Nenhuma instância adicionada">
+                                                <f:facet name="header"> <div
+                                                        style="text-align: center;">Instâncias Selecionadas:</div></f:facet>
+                                                <p:column headerText="Descrição"  style="text-align: center">
+                                                    <p:outputLabel value="#{instance.description}"/>
+                                                </p:column>
+                                            </p:dataTable>
+                                        </p:column>
+                                    </p:row>
+                                    <p:row>
+                                        <p:column colspan="2">    
+                                            <p:dataTable value="#{workflowComposerBean.elements}" var="e"
+                                                         emptyMessage="Nenhum elemento adicionado">
+                                                <p:column headerText="Serviços">
+                                                    <p:outputLabel value="#{e.name}"/>
+                                                </p:column>
+                                            </p:dataTable>
+                                      </p:column>
+                                    </p:row>
+                                    <p:row>
+                                        <p:column colspan="2">
+                                             <h:outputText value="Deseja limitar a execução? " />
+                                             <p:selectBooleanButton id="limit" value="#{workflowComposerBean.limitation}" onLabel="Sim" offLabel="Não" style="width:60px">
+                                                 <f:ajax render="select-type-limitation-panel" />
+                                             </p:selectBooleanButton>
+                                            <h:panelGrid  >
+                                                <h:panelGroup id="select-type-limitation-panel"  >
+                                                    <p:selectOneRadio id="sla_type_limitation" value="#{workflowComposerBean.limitationType}" layout="custom" onchange="handleLimitations(this)">
+                                                        <f:selectItem class="sla-type-limitation" itemLabel="Tempo de execução:" itemValue="0" itemDisabled="false"/>
+                                                        <f:selectItem class="sla-type-limitation" itemLabel="Custo de execução" itemValue="1" />
+                                                    </p:selectOneRadio>
+                                                    <h:panelGrid id="sla_type_limitation_panel" columns="3" cellpadding="5" rendered="#{workflowComposerBean.limitation == true}" >
+                                                        <p:radioButton id="opt1" for="sla_type_limitation" itemIndex="0" />
+                                                        <p:outputLabel for="opt1" value="Tempo de execução em horas: " />                                                    
+                                                        <p:inputNumber id="opt1v" class="limitationValueExecutionTime" value="#{workflowComposerBean.limitationValueExecutionTime}" emptyValue="0.00" symbol=" H" symbolPosition="sufix" decimalPlaces="4"/>
+                                                        <p:radioButton id="opt2" for="sla_type_limitation" itemIndex="1" />
+                                                        <h:outputLabel for="opt2" value="Custo de execução: " />
+                                                        <p:inputNumber id="opt2v" class="limitationValueExecutionCost" value="#{workflowComposerBean.limitationValueExecutionCost}" emptyValue="0.00" symbol="R$ " decimalPlaces="4"/>  
+                                                    </h:panelGrid>
+                                                </h:panelGroup>
+                                            </h:panelGrid> 
+                                             <p:row>
+                                            <h:outputLabel id="exceedValue" value="Custo Máximo disposto à pagar, caso execução não termine: " />
+                                            <p:inputNumber id="exceedValueInput" class="exceedValueExecutionCost" value="#{workflowComposerBean.exceedValueExecutionCost}" emptyValue="0.00" symbol="R$ " decimalPlaces="4"/>  
+                                            </p:row>
+                                            <h:outputText value="Aceito os termos do contrato de SLA: " />
+                                            <p:selectBooleanButton id="value1" value="#{workflowComposerBean.agreeContract}" onLabel="Sim" offLabel="Não" style="width:60px"/>
+                                        </p:column>
+                                    </p:row>
+                                    
+                                </p:panelGrid>
+                            </p:fieldset>  
+                        </p:panel> 
+                    </p:tab>
+                    <!--Resumo do workflow-->
+                    <p:tab id="workflow_summary" title="Resumo deste Workflow">
+                        <p:panel>
+                            <p:panel>
+                                Confira aqui o resumo desta execução. Ao clicar em "Confirmar Workflow" será iniciada sua execução.
+                            </p:panel>
+                            <br />
+                            <p:panel>
+                                <p:panelGrid columns="2" style="width: 100%; margin: 15px">
+                                    <f:facet name="header">
+                                        <p:outputLabel value="Dados deste workflow" style="font-size: 120%; margin: 10px"/>
+                                    </f:facet>
+                                    <p:outputLabel value="Id" style="font-weight: bold"/>
+                                    <p:outputLabel value="#{workflowComposerBean.workflow.id}" style="font-weight: bold"/>  
+                                    <p:outputLabel value="Descrição" style="font-weight: bold"/>
+                                    <p:outputLabel value="#{workflowComposerBean.workflow.description} " />
+                                    <p:outputLabel value="Tamanho" style="font-weight: bold"/>
+                                    <p:outputLabel value="#{workflowComposerBean.workflow.jobs.size()} Job(s)" />
+                                    <p:outputLabel value="Criado em" style="font-weight: bold"/>
+                                    <p:outputLabel value="#{workflowComposerBean.workflow.creationDatestamp}" />
+                                    <p:outputLabel value="Quantidade de inputs" style="font-weight: bold"/>
+                                    <p:outputLabel value="#{workflowComposerBean.jobs.size()}" />
+                                    <p:outputLabel value="Quantidade de VM's" style="font-weight: bold"/>
+                                    <p:outputLabel value="SLA Aceito?" style="font-weight: bold"/>
+                                    <p:outputLabel value="Status" style="font-weight: bold"/>
+                                    <p:outputLabel value="#{workflowComposerBean.workflowStatus}" 
+                                                   style="font-weight: bold; color: #{workflowComposerBean.workflowColor}"/>
+                                </p:panelGrid>
+                            </p:panel>
+                            <br />
+                            <div style="text-align: center;">
+                                <h:panelGrid columns="2" style="text-align: center">
+                                    <p:panel header="Executar Workflow" style="text-align: center; width: 400px">
+                                        <p:outputLabel value="Iniciar execução deste Workflow. Seu Workflow será enviado ao BioNimbuZ e você poderá acompanhar sua execução" 
+                                                       style="margin: 10px" /> <br />
+                                        <div style="text-align: center;">
+                                            <p:commandButton action="#{workflowComposerBean.startWorkflow()}" disabled="#{workflowComposerBean.agreeContract==false}" value="Confirmar Workflow" style="margin: 10px; border-color: #2980b9"/>
+                                        </div>
+                                    </p:panel>
+                                    <p:panel header="Download" style="text-align: center; width: 400px">
+                                        <p:outputLabel value="Você pode realizar o download deste Workflow e importá-lo posteriormente ou compartilhá-lo" 
+                                                       style="margin: 10px" /> <br />
+                                        <div style="text-align: center;">
+                                            <p:commandButton value="Download" ajax="false" icon="ui-icon-arrowthick-1-s" style="margin: 10px; border-color: #2980b9" >
+                                                <p:fileDownload value="#{workflowComposerBean.downloadWorkflow()}" />
+                                            </p:commandButton>
+                                        </div>
+                                    </p:panel>
+                                </h:panelGrid>
+                            </div>
+                        </p:panel>
+                    </p:tab>
+                </p:wizard>
+            </h:form>
+        </ui:define>
+    </ui:decorate>
+    <!-- ***************************************************************************************************************** -->
+    <!--                                                        DIALOGS                                                    -->
+    <!-- ***************************************************************************************************************** -->
+    <!-- File Dialog: Used for the user to pick inputs -->
+    <p:dialog widgetVar="file_dlg" showEffect="fade" header="Entrada"
+              hideEffect="fade" modal="true" closable="false">
+        <h:form id="file_form">
+            <p:panel>
+                Escolha a o arquivo de entrada deste passo e seus parâmetros.
+            </p:panel>
+            <br />
+            <p:accordionPanel>
+                <p:tab title="Arquivos">
+                    <p:fieldset id="file_list_dlg" legend="Lista de Arquivos">
+                        <p:panel>
+                            Caso não tenho realizado o upload dos arquivos necessários para essa execução, faça-o 
+                            <p:commandLink value="aqui" action="upload_file"/>
+                        </p:panel>
+                        <br />
+                        <div style="text-align: center;">
+                            <p:dataTable value="#{workflowComposerBean.loggedUser.files}" var="f" style="width: 1000px"
+                                         paginator="true" rows="5" emptyMessage="Nenhum arquivo encontrado"
+                                         selection="#{workflowComposerBean.inputFiles}" rowKey="#{f.name}" >
+
+                                <p:column headerText="Nome" width="25em" style="text-align: center">
+                                    <p:outputLabel value="#{f.name}"/>
+                                </p:column>
+
+                                <p:column headerText="Upload em" width="25em" style="text-align: center">
+                                    <p:outputLabel value="#{f.uploadTimestamp}"/>
+                                </p:column>
+
+                                <p:column headerText="Tamanho" width="25em" style="text-align: center">
+                                    <p:outputLabel value="#{f.size} Kb"/>
+                                </p:column>
+
+                                <p:column headerText="Escolha" style="text-align: center" selectionMode="multiple" />
+                            </p:dataTable>
+                        </div>
+                    </p:fieldset>
+                </p:tab>
+                <!--                <p:tab title="URL">
+                                    <p:fieldset legend="URL">
+                                        Digite a URL de onde se encontra seu arquivo (URL de um armazenamento, link do Dropbox, link do Google Drive, ...). <br />
+                                        Apontar o caminho direto para o arquivo (não apontar pastas, por exemplo):
+                                        <h:inputText id="url" style="width: 99%; margin: 3px" value="#{workflowComposerBean.inputURL}"/>
+                                    </p:fieldset>
+                                </p:tab>-->
+
+            </p:accordionPanel>
+            <br />
+            <div style="text-align: center;">
+                <h:panelGrid columns="23" cellpadding="3" cellspacing="7">
+                    <p:fieldset legend="Argumentos de entrada">
+                        <div style="text-align: center;">
+                            <p:outputLabel value="Argumentos da linha de comando. Ex: -X --cached -p 10 (Opcional)" /> <br />
+                            <h:inputText id="args" style="width: 80%; margin: 3px" value="#{workflowComposerBean.arguments}" styleClass="font-courier"/>
+                        </div>
+                    </p:fieldset>
+                    <p:fieldset legend="Arquivos de referência (Opcional)">
+                        <div style="text-align: center;">
+                            <p:outputLabel value="Referências disponíveis de entrada" /> <br />
+
+                            <p:selectOneMenu id="refs" value="#{workflowComposerBean.chosenReference}" style="width: 230px; font-size: 110%">
+                                <f:selectItem itemLabel="Referência" itemValue="" />
+                                <f:selectItems value="#{workflowComposerBean.references}" />
+                            </p:selectOneMenu>
+                        </div>
+                    </p:fieldset>
+                    <p:fieldset legend="Formato do Arquivo de saida (Opcional)">
+                        <div style="text-align: center;">
+                            <p:outputLabel value="Formatos suportados" /> <br />
+
+                            <p:selectOneMenu id="formats" value="#{workflowComposerBean.fileFormat}">
+                                <f:selectItem itemLabel="Formato" itemValue="" />
+                                <f:selectItems value="#{workflowComposerBean.supportedFormats}" />
+                            </p:selectOneMenu>
+                        </div>
+                    </p:fieldset>
+                </h:panelGrid>
+            </div>
+            <br />
+            <p:panel>
+                Para nao utilizar dados de entrada, clique em 'Pular'. 
+                Neste caso, a entrada deste passo sera apenas a saida do passo anterior. <br />
+                <p:commandButton value="Confirmar" action="#{workflowComposerBean.setJobFields()}" 
+                                 update=":form:growl" style="margin: 5px"
+                                 onclick="PF('file_dlg').hide()"/>
+                <p:commandButton value="Pular" update=":form:growl" style="margin: 5px"
+                                 action="#{workflowComposerBean.setJobFieldsWithOutput()}"
+                                 onclick="PF('file_dlg').hide()"/>
+            </p:panel>
+        </h:form>
+    </p:dialog>
+    <script type="text/javascript">
+        $(function () {
+            $('.limitationValueExecutionTime').hide();
+            $('.limitationValueExecutionCost').hide();
+        });
+        function handleLimitations(element) {
+            it = $(element);
+            if (it.prop('checked')) {
+                if (it.val() == 0) {
+                    $('.limitationValueExecutionCost').hide();
+                    $('.limitationValueExecutionCost').val('');
+                    $('.limitationValueExecutionTime').show();
+                } else {
+                    $('.limitationValueExecutionTime').hide();
+                    $('.limitationValueExecutionTime').val('');
+                    $('.limitationValueExecutionCost').show();
+                }
+            }
+        }
+
+        function start() {
+            PF('startButton1').disable();
+
+            window['progress'] = setInterval(function () {
+                var pbClient = PF('pbClient'),
+                        oldValue = pbClient.getValue(),
+                        newValue = oldValue + 10;
+
+                pbClient.setValue(pbClient.getValue() + 10);
+
+                if (newValue === 100) {
+                    clearInterval(window['progress']);
+                }
+
+
+            }, 1000);
+        }
+
+        function cancel() {
+            clearInterval(window['progress']);
+            PF('pbClient').setValue(0);
+            PF('startButton1').enable();
+        }
+    </script>
+</html>

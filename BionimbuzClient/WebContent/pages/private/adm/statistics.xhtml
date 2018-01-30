@@ -1,0 +1,68 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+
+    <ui:decorate template="/resources/templates/template.xhtml">
+
+        <!-- Center Content -->
+        <ui:define name="conteudo_centro">
+
+            <h:form id="form2">
+                
+                <p:commandButton icon="fa fa-refresh" update=":form2:tabela" />
+                <p:commandButton value="Create Amazon" actionListener="#{elasticityButton.createVM}"/>
+                
+                <!--<p:commandButton update=":form2:tabela" icon="fa-refresh"/>
+                <p:poll interval="1" update=":form2:tabela"/>-->
+                
+                <p:dataTable id="tabela" var="instance" value="#{instanceView.instances}" rowKey="#{instance.id}"
+                             selection="#{instanceView.selectedInstance}" selectionMode="single">
+                    <p:column headerText="Id">
+                        <h:outputText value="#{instance.id}" />
+                    </p:column>
+                    <p:column headerText="State">
+                        <h:outputText value="#{instance.state}" />
+                    </p:column>
+                    <p:column headerText="Provider">
+                        <h:outputText value="Amazon" />
+                    </p:column>
+
+                </p:dataTable>
+
+                <p:contextMenu for="tabela">
+                    <p:menuitem value="View" update="instanceDetail" icon="ui-icon-search" oncomplete="PF('instDialog').show()"/>
+                    <p:menuitem value="start" icon="fa fa-toggle-right" />
+                    <p:menuitem value="stop" icon="fa fa-pause" />
+                    <p:menuitem value="reboot"  icon="fa fa-refresh" />
+                    <p:menuitem value="terminate"  icon="fa fa-times-circle" actionListener="#{elasticityButton.stopInstance(instanceView.selectedInstance.id)}" />
+                    <p:menuitem value="Execute Elasticity"  icon="fa fa-skyatlas" actionListener="#{elasticityButton.executeElasticity(instanceView.selectedInstance.id)}" />
+                </p:contextMenu>
+
+                <p:dialog header="Instance Info" widgetVar="instDialog" resizable="false">
+                    <p:outputPanel id="instanceDetail" style="text-align:center;">
+                        <p:panelGrid  columns="2" rendered="#{not empty instanceView.selectedInstance}">
+                            <f:facet name="header">
+                                <p:graphicImage name="img/amazon-s3.png"/> 
+                            </f:facet> 
+
+                            <h:outputText value="Instance ID:" />
+                            <h:outputText value="#{instanceView.selectedInstance.id}" />                   
+                            
+                            <h:outputText value="CPU Utilization: (last hour average)" />
+<!--                            <h:outputText value="#{instanceView.selectedInstance.CPUutilization}" />-->
+                                <h:outputText value="48%" />
+                            
+                        </p:panelGrid>
+                    </p:outputPanel>
+                </p:dialog>
+            </h:form>
+            
+        </ui:define>
+
+    </ui:decorate>
+</html>

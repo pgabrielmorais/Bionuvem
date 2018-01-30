@@ -1,0 +1,36 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<ui:decorate template="/resources/templates/template.xhtml">
+
+	<!-- Center Content -->
+	<ui:define name="conteudo_centro">
+		<h:form>
+			<p:outputLabel value="#{sessionBean.loggedUser.id}" />
+			<br />
+			<p:outputLabel value="#{sessionBean.loggedUser.celphone}" />
+			<br />
+			<p:outputLabel value="#{sessionBean.loggedUser.cpf}" />
+			<br />
+			<p:outputLabel value="#{sessionBean.loggedUser.email}" />
+			<br />
+			<p:outputLabel value="#{sessionBean.loggedUser.login}" />
+			<br />
+			<p:outputLabel value="#{sessionBean.loggedUser.password}" />
+			<br />
+			<p:outputLabel value="#{sessionBean.loggedUser.securityToken}" />
+                        <br />
+                        <p:outputLabel value="#{sessionBean.loggedUser.workflows.size()}" />
+			<br />
+			<br />
+			
+			
+		</h:form>
+	</ui:define>
+
+</ui:decorate>
+</html>

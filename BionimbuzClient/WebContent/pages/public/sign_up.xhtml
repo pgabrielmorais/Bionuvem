@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+    <h:head>
+        <h:outputStylesheet library="css" name="login.css" />
+    </h:head>
+
+    <h:body>
+
+        <h:panelGroup layout="block" styleClass="error-header"
+                      rendered="#{param.error}">
+            <center>Usuário/Senha incorretos</center>
+        </h:panelGroup>
+
+        <div class="centered">
+            <h:form>
+                <p:growl id="growl" autoUpdate="true" />
+                <p:panel styleClass="LoginPanel">
+                    <center>
+                        <br /> <br />
+                        <h:graphicImage value="/resources/img/logo_bionimbuz.jpg" />
+                        <br /> <br /> <br />
+                        <p:panel header="Cadastro">
+                            <h:panelGrid columns="2" cellpadding="4">
+                                <p:inputText placeholder="Nome" value="#{signUpBean.user.nome}"
+                                             required="true" requiredMessage="Nome obrigatório" />
+                                <br />
+                                <p:inputText placeholder="Email" required="true"
+                                             requiredMessage="Email obrigatório"
+                                             value="#{signUpBean.user.email}" />
+                                <br />
+                                <p:inputMask placeholder="CPF" required="true"
+                                             requiredMessage="CPF obrigatório"
+                                             value="#{signUpBean.user.cpf}" 
+                                             mask="999.999.999-99"/>
+                                <br />
+                                <p:inputMask placeholder="Telefone" required="true"
+                                             requiredMessage="Telefone obrigatório" 
+                                             value="#{signUpBean.user.celphone}" 
+                                             mask="(99)9999-9999" />
+                                <br />
+                                <p:inputText placeholder="Login" value="#{signUpBean.user.login}"
+                                             required="true" requiredMessage="Login obrigatório" />
+                                <br />
+                                <p:password placeholder="Senha" required="true"
+                                            requiredMessage="Senha obrigatória"
+                                            value="#{signUpBean.user.password}" />
+                                <br />
+                            </h:panelGrid>
+                            <br />
+                            <h:commandButton value="Cadastrar" style="width: 200px"
+                                             action="#{signUpBean.signUp()}" styleClass="btn" />
+                            <br />
+                        </p:panel>
+                    </center>
+                </p:panel>
+            </h:form>
+        </div>
+    </h:body>
+</html>
